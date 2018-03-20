@@ -78,7 +78,7 @@ Send two amounts to two different addresses, subtract fee from amount:
 &gt; particl-cli sendmany &#34;&#34; &#34;{\&#34;PswXnorAgjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;PvhJj4j9s6SsuRsAkPZUfHPCjZRNKLeuqP\&#34;:0.02}&#34; 1 &#34;&#34; &#34;[\&#34;PswXnorAgjpAtaySWkPSmWQe3Fc8LmviVc\&#34;,\&#34;PvhJj4j9s6SsuRsAkPZUfHPCjZRNKLeuqP\&#34;]&#34;
 
 As a json rpc call
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;sendmany&#34;, &#34;params&#34;: [&#34;&#34;, &#34;{\&#34;PswXnorAgjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;PvhJj4j9s6SsuRsAkPZUfHPCjZRNKLeuqP\&#34;:0.02}&#34;, 6, &#34;testing&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;sendmany&#34;, &#34;params&#34;: [&#34;&#34;, {&#34;1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XX&#34;:0.01,&#34;1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz&#34;:0.02}, 6, &#34;testing&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
 
 </pre>
             <hr>
@@ -87,7 +87,7 @@ As a json rpc call
           This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
           </p>
           <p>
-          Particl version: 0.15.2.1 
+          Particl version: 0.16.0.1 
           </p>
           <p>
           Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
@@ -208,6 +208,9 @@ As a json rpc call
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="savemempool.html">savemempool</a>
+                  <br>
+                
                   <a href="verifychain.html">verifychain</a>
                   <br>
                 
@@ -224,13 +227,13 @@ As a json rpc call
               </div>
               <div class="card-body">
                 
-                  <a href="getinfo.html">getinfo</a>
-                  <br>
-                
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
                   <a href="help.html">help</a>
+                  <br>
+                
+                  <a href="logging.html">logging</a>
                   <br>
                 
                   <a href="stop.html">stop</a>
@@ -402,7 +405,10 @@ As a json rpc call
               </div>
               <div class="card-body">
                 
-                  <a href="smsgaddkey.html">smsgaddkey</a>
+                  <a href="smsg.html">smsg</a>
+                  <br>
+                
+                  <a href="smsgaddaddress.html">smsgaddaddress</a>
                   <br>
                 
                   <a href="smsgaddlocaladdress.html">smsgaddlocaladdress</a>
@@ -418,6 +424,9 @@ As a json rpc call
                   <br>
                 
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimportprivkey.html">smsgimportprivkey</a>
                   <br>
                 
                   <a href="smsginbox.html">smsginbox</a>
@@ -445,6 +454,40 @@ As a json rpc call
                   <br>
                 
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
+                Usbdevice
+              </div>
+              <div class="card-body">
+                
+                  <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="devicesignmessage.html">devicesignmessage</a>
+                  <br>
+                
+                  <a href="devicesignrawtransaction.html">devicesignrawtransaction</a>
+                  <br>
+                
+                  <a href="getdeviceinfo.html">getdeviceinfo</a>
+                  <br>
+                
+                  <a href="getdevicepublickey.html">getdevicepublickey</a>
+                  <br>
+                
+                  <a href="getdevicexpub.html">getdevicexpub</a>
+                  <br>
+                
+                  <a href="initaccountfromdevice.html">initaccountfromdevice</a>
+                  <br>
+                
+                  <a href="listdevices.html">listdevices</a>
                   <br>
                 
               </div>
@@ -504,6 +547,9 @@ As a json rpc call
                   <br>
                 
                   <a href="clearwallettransactions.html">clearwallettransactions</a>
+                  <br>
+                
+                  <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
                   <a href="debugwallet.html">debugwallet</a>
@@ -605,9 +651,6 @@ As a json rpc call
                   <a href="importwallet.html">importwallet</a>
                   <br>
                 
-                  <a href="keyinfo.html">keyinfo</a>
-                  <br>
-                
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
@@ -657,6 +700,9 @@ As a json rpc call
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
+                  <br>
+                
+                  <a href="rescanblockchain.html">rescanblockchain</a>
                   <br>
                 
                   <a href="reservebalance.html">reservebalance</a>

@@ -40,22 +40,22 @@ Returns an object containing various wallet state info.
 Result:
 {
   &#34;walletname&#34;: xxxxx,             (string) the wallet name
-  &#34;walletversion&#34;: xxxxx,        (numeric) the wallet version
-  &#34;total_balance&#34;: xxxxxxx,      (numeric) the total balance of the wallet in PART
-  &#34;balance&#34;: xxxxxxx,            (numeric) the total confirmed balance of the wallet in PART
-  &#34;blind_balance&#34;: xxxxxxx,      (numeric) the total confirmed blinded balance of the wallet in PART
-  &#34;anon_balance&#34;: xxxxxxx,       (numeric) the total confirmed anon balance of the wallet in PART
-  &#34;staked_balance&#34;: xxxxxxx,     (numeric) the total staked balance of the wallet in PART (non-spendable until maturity)
-  &#34;unconfirmed_balance&#34;: xxx,    (numeric) the total unconfirmed balance of the wallet in PART
-  &#34;immature_balance&#34;: xxxxxx,    (numeric) the total immature balance of the wallet in PART
-  &#34;reserve&#34;: xxxxxx,             (numeric) the reserve balance of the wallet in PART
-  &#34;txcount&#34;: xxxxxxx,            (numeric) the total number of transactions in the wallet
-  &#34;keypoololdest&#34;: xxxxxx,       (numeric) the timestamp (seconds since Unix epoch) of the oldest pre-generated key in the key pool
-  &#34;keypoolsize&#34;: xxxx,           (numeric) how many new keys are pre-generated
-  &#34;encryptionstatus&#34;:            (string) unencrypted/locked/unlocked
-  &#34;unlocked_until&#34;: ttt,         (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked
-  &#34;paytxfee&#34;: x.xxxx,            (numeric) the transaction fee configuration, set in PART/kB
-  &#34;hdmasterkeyid&#34;: &#34;&lt;hash160&gt;&#34; (string) the Hash160 of the HD master pubkey
+  &#34;walletversion&#34;: xxxxx,          (numeric) the wallet version
+  &#34;total_balance&#34;: xxxxxxx,        (numeric) the total balance of the wallet in PART
+  &#34;balance&#34;: xxxxxxx,              (numeric) the total confirmed balance of the wallet in PART
+  &#34;blind_balance&#34;: xxxxxxx,        (numeric) the total confirmed blinded balance of the wallet in PART
+  &#34;anon_balance&#34;: xxxxxxx,         (numeric) the total confirmed anon balance of the wallet in PART
+  &#34;staked_balance&#34;: xxxxxxx,       (numeric) the total staked balance of the wallet in PART (non-spendable until maturity)
+  &#34;unconfirmed_balance&#34;: xxx,      (numeric) the total unconfirmed balance of the wallet in PART
+  &#34;immature_balance&#34;: xxxxxx,      (numeric) the total immature balance of the wallet in PART
+  &#34;reserve&#34;: xxxxxx,               (numeric) the reserve balance of the wallet in PART
+  &#34;txcount&#34;: xxxxxxx,              (numeric) the total number of transactions in the wallet
+  &#34;keypoololdest&#34;: xxxxxx,         (numeric) the timestamp (seconds since Unix epoch) of the oldest pre-generated key in the key pool
+  &#34;keypoolsize&#34;: xxxx,             (numeric) how many new keys are pre-generated
+  &#34;encryptionstatus&#34;:              (string) unencrypted/locked/unlocked
+  &#34;unlocked_until&#34;: ttt,           (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked
+  &#34;paytxfee&#34;: x.xxxx,              (numeric) the transaction fee configuration, set in PART/kB
+  &#34;hdmasterkeyid&#34;: &#34;&lt;hash160&gt;&#34;   (string) the Hash160 of the HD account pubkey
 }
 
 Examples:
@@ -69,7 +69,7 @@ Examples:
           This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
           </p>
           <p>
-          Particl version: 0.15.2.1 
+          Particl version: 0.16.0.1 
           </p>
           <p>
           Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
@@ -190,6 +190,9 @@ Examples:
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="savemempool.html">savemempool</a>
+                  <br>
+                
                   <a href="verifychain.html">verifychain</a>
                   <br>
                 
@@ -206,13 +209,13 @@ Examples:
               </div>
               <div class="card-body">
                 
-                  <a href="getinfo.html">getinfo</a>
-                  <br>
-                
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
                   <a href="help.html">help</a>
+                  <br>
+                
+                  <a href="logging.html">logging</a>
                   <br>
                 
                   <a href="stop.html">stop</a>
@@ -384,7 +387,10 @@ Examples:
               </div>
               <div class="card-body">
                 
-                  <a href="smsgaddkey.html">smsgaddkey</a>
+                  <a href="smsg.html">smsg</a>
+                  <br>
+                
+                  <a href="smsgaddaddress.html">smsgaddaddress</a>
                   <br>
                 
                   <a href="smsgaddlocaladdress.html">smsgaddlocaladdress</a>
@@ -400,6 +406,9 @@ Examples:
                   <br>
                 
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimportprivkey.html">smsgimportprivkey</a>
                   <br>
                 
                   <a href="smsginbox.html">smsginbox</a>
@@ -427,6 +436,40 @@ Examples:
                   <br>
                 
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
+                Usbdevice
+              </div>
+              <div class="card-body">
+                
+                  <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="devicesignmessage.html">devicesignmessage</a>
+                  <br>
+                
+                  <a href="devicesignrawtransaction.html">devicesignrawtransaction</a>
+                  <br>
+                
+                  <a href="getdeviceinfo.html">getdeviceinfo</a>
+                  <br>
+                
+                  <a href="getdevicepublickey.html">getdevicepublickey</a>
+                  <br>
+                
+                  <a href="getdevicexpub.html">getdevicexpub</a>
+                  <br>
+                
+                  <a href="initaccountfromdevice.html">initaccountfromdevice</a>
+                  <br>
+                
+                  <a href="listdevices.html">listdevices</a>
                   <br>
                 
               </div>
@@ -486,6 +529,9 @@ Examples:
                   <br>
                 
                   <a href="clearwallettransactions.html">clearwallettransactions</a>
+                  <br>
+                
+                  <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
                   <a href="debugwallet.html">debugwallet</a>
@@ -587,9 +633,6 @@ Examples:
                   <a href="importwallet.html">importwallet</a>
                   <br>
                 
-                  <a href="keyinfo.html">keyinfo</a>
-                  <br>
-                
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
@@ -639,6 +682,9 @@ Examples:
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
+                  <br>
+                
+                  <a href="rescanblockchain.html">rescanblockchain</a>
                   <br>
                 
                   <a href="reservebalance.html">reservebalance</a>

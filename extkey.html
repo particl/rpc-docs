@@ -34,32 +34,38 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>extkey - Particl RPC</h1>
           
-            <pre>extkey [info|list|account|gen|import|importAccount|setMaster|setDefaultAccount|deriveAccount|options]
-extkey [&#34;info&#34;] [key] [path]
-extkey list [show_secrets] - default
+            <pre>extkey &#34;mode&#34;
+&#34;mode&#34; can be: info|list|account|gen|import|importAccount|setMaster|setDefaultAccount|deriveAccount|options
+    Default: list, or info when called like: extkey &#34;key&#34;
+
+extkey info &#34;key&#34; ( &#34;path&#34; )
+    Return info for provided &#34;key&#34; or key at &#34;path&#34; from &#34;key&#34;
+extkey list ( show_secrets )
     List loose and account ext keys.
-extkey account &lt;key/id&gt; [show_secrets]
+extkey account ( &#34;key/id&#34; show_secrets )
     Display details of account.
-extkey key &lt;key/id&gt; [show_secrets]
-    Display details of loose key.
-extkey gen [passphrase] [num hashes] [seed string]
+    Show default account when called without parameters.
+extkey key &#34;key/id&#34; ( show_secrets )
+    Display details of loose extkey in wallet.
+extkey gen &#34;passphrase&#34; ( numhashes &#34;seedstring&#34; )
+    DEPRECATED
     If no passhrase is specified key will be generated from random data.
     Warning: It is recommended to not use the passphrase
-extkey import &lt;key&gt; [label] [bip44] [save_bip44_key]
+extkey import &#34;key&#34; ( &#34;label&#34; bip44 save_bip44_key )
     Add loose key to wallet.
     If bip44 is set import will add the key derived from &lt;key&gt; on the bip44 path.
     If save_bip44_key is set import will save the bip44 key to the wallet.
-extkey importAccount &lt;key&gt; [time_scan_from] [label] 
+extkey importAccount &#34;key&#34; ( time_scan_from &#34;label&#34; ) 
     Add account key to wallet.
         time_scan_from: N no check, Y-m-d date to start scanning the blockchain for owned txns.
-extkey setMaster &lt;key/id&gt;
+extkey setMaster &#34;key/id&#34;
     Set a private ext key as current master key.
     key can be a extkeyid or full key, but must be in the wallet.
-extkey setDefaultAccount &lt;id&gt;
+extkey setDefaultAccount &#34;id&#34;
     Set an account as the default.
-extkey deriveAccount [label] [path]
-    Make a new account from the current master key, saves to wallet.
-extkey options &lt;key&gt; [optionName] [newValue]
+extkey deriveAccount ( &#34;label&#34; &#34;path&#34; )
+    Make a new account from the current master key, save to wallet.
+extkey options &#34;key&#34; ( &#34;optionName&#34; &#34;newValue&#34; )
     Manage keys and accounts
 
 
@@ -70,7 +76,7 @@ extkey options &lt;key&gt; [optionName] [newValue]
           This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
           </p>
           <p>
-          Particl version: 0.15.2.1 
+          Particl version: 0.16.0.1 
           </p>
           <p>
           Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
@@ -191,6 +197,9 @@ extkey options &lt;key&gt; [optionName] [newValue]
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="savemempool.html">savemempool</a>
+                  <br>
+                
                   <a href="verifychain.html">verifychain</a>
                   <br>
                 
@@ -207,13 +216,13 @@ extkey options &lt;key&gt; [optionName] [newValue]
               </div>
               <div class="card-body">
                 
-                  <a href="getinfo.html">getinfo</a>
-                  <br>
-                
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
                   <a href="help.html">help</a>
+                  <br>
+                
+                  <a href="logging.html">logging</a>
                   <br>
                 
                   <a href="stop.html">stop</a>
@@ -385,7 +394,10 @@ extkey options &lt;key&gt; [optionName] [newValue]
               </div>
               <div class="card-body">
                 
-                  <a href="smsgaddkey.html">smsgaddkey</a>
+                  <a href="smsg.html">smsg</a>
+                  <br>
+                
+                  <a href="smsgaddaddress.html">smsgaddaddress</a>
                   <br>
                 
                   <a href="smsgaddlocaladdress.html">smsgaddlocaladdress</a>
@@ -401,6 +413,9 @@ extkey options &lt;key&gt; [optionName] [newValue]
                   <br>
                 
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimportprivkey.html">smsgimportprivkey</a>
                   <br>
                 
                   <a href="smsginbox.html">smsginbox</a>
@@ -428,6 +443,40 @@ extkey options &lt;key&gt; [optionName] [newValue]
                   <br>
                 
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
+                Usbdevice
+              </div>
+              <div class="card-body">
+                
+                  <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="devicesignmessage.html">devicesignmessage</a>
+                  <br>
+                
+                  <a href="devicesignrawtransaction.html">devicesignrawtransaction</a>
+                  <br>
+                
+                  <a href="getdeviceinfo.html">getdeviceinfo</a>
+                  <br>
+                
+                  <a href="getdevicepublickey.html">getdevicepublickey</a>
+                  <br>
+                
+                  <a href="getdevicexpub.html">getdevicexpub</a>
+                  <br>
+                
+                  <a href="initaccountfromdevice.html">initaccountfromdevice</a>
+                  <br>
+                
+                  <a href="listdevices.html">listdevices</a>
                   <br>
                 
               </div>
@@ -487,6 +536,9 @@ extkey options &lt;key&gt; [optionName] [newValue]
                   <br>
                 
                   <a href="clearwallettransactions.html">clearwallettransactions</a>
+                  <br>
+                
+                  <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
                   <a href="debugwallet.html">debugwallet</a>
@@ -588,9 +640,6 @@ extkey options &lt;key&gt; [optionName] [newValue]
                   <a href="importwallet.html">importwallet</a>
                   <br>
                 
-                  <a href="keyinfo.html">keyinfo</a>
-                  <br>
-                
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
@@ -640,6 +689,9 @@ extkey options &lt;key&gt; [optionName] [newValue]
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
+                  <br>
+                
+                  <a href="rescanblockchain.html">rescanblockchain</a>
                   <br>
                 
                   <a href="reservebalance.html">reservebalance</a>

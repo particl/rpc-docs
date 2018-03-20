@@ -39,41 +39,47 @@ Returns an object containing various state info regarding blockchain processing.
 
 Result:
 {
-  &#34;chain&#34;: &#34;xxxx&#34;,        (string) current network name as defined in BIP70 (main, test, regtest)
-  &#34;blocks&#34;: xxxxxx,         (numeric) the current number of blocks processed in the server
-  &#34;headers&#34;: xxxxxx,        (numeric) the current number of headers we have validated
-  &#34;bestblockhash&#34;: &#34;...&#34;, (string) the hash of the currently best block
-  &#34;difficulty&#34;: xxxxxx,     (numeric) the current difficulty
-  &#34;mediantime&#34;: xxxxxx,     (numeric) median time for the current best block
+  &#34;chain&#34;: &#34;xxxx&#34;,              (string) current network name as defined in BIP70 (main, test, regtest)
+  &#34;blocks&#34;: xxxxxx,             (numeric) the current number of blocks processed in the server
+  &#34;headers&#34;: xxxxxx,            (numeric) the current number of headers we have validated
+  &#34;bestblockhash&#34;: &#34;...&#34;,       (string) the hash of the currently best block
+  &#34;moneysupply&#34;: xxxxxxx,       (numeric) the total amount of coin in the network
+  &#34;difficulty&#34;: xxxxxx,         (numeric) the current difficulty
+  &#34;mediantime&#34;: xxxxxx,         (numeric) median time for the current best block
   &#34;verificationprogress&#34;: xxxx, (numeric) estimate of verification progress [0..1]
-  &#34;chainwork&#34;: &#34;xxxx&#34;     (string) total amount of work in active chain, in hexadecimal
-  &#34;pruned&#34;: xx,             (boolean) if the blocks are subject to pruning
-  &#34;pruneheight&#34;: xxxxxx,    (numeric) lowest-height complete block stored
-  &#34;softforks&#34;: [            (array) status of softforks in progress
+  &#34;initialblockdownload&#34;: xxxx, (bool) (debug information) estimate of whether this node is in Initial Block Download mode.
+  &#34;chainwork&#34;: &#34;xxxx&#34;           (string) total amount of work in active chain, in hexadecimal
+  &#34;size_on_disk&#34;: xxxxxx,       (numeric) the estimated size of the block and undo files on disk
+  &#34;pruned&#34;: xx,                 (boolean) if the blocks are subject to pruning
+  &#34;pruneheight&#34;: xxxxxx,        (numeric) lowest-height complete block stored (only present if pruning is enabled)
+  &#34;automatic_pruning&#34;: xx,      (boolean) whether automatic pruning is enabled (only present if pruning is enabled)
+  &#34;prune_target_size&#34;: xxxxxx,  (numeric) the target size used by pruning (only present if automatic pruning is enabled)
+  &#34;softforks&#34;: [                (array) status of softforks in progress
      {
-        &#34;id&#34;: &#34;xxxx&#34;,        (string) name of softfork
-        &#34;version&#34;: xx,         (numeric) block version
-        &#34;reject&#34;: {            (object) progress toward rejecting pre-softfork blocks
-           &#34;status&#34;: xx,       (boolean) true if threshold reached
+        &#34;id&#34;: &#34;xxxx&#34;,           (string) name of softfork
+        &#34;version&#34;: xx,          (numeric) block version
+        &#34;reject&#34;: {             (object) progress toward rejecting pre-softfork blocks
+           &#34;status&#34;: xx,        (boolean) true if threshold reached
         },
      }, ...
   ],
-  &#34;bip9_softforks&#34;: {          (object) status of BIP9 softforks in progress
-     &#34;xxxx&#34; : {                (string) name of the softfork
-        &#34;status&#34;: &#34;xxxx&#34;,    (string) one of &#34;defined&#34;, &#34;started&#34;, &#34;locked_in&#34;, &#34;active&#34;, &#34;failed&#34;
-        &#34;bit&#34;: xx,             (numeric) the bit (0-28) in the block version field used to signal this softfork (only for &#34;started&#34; status)
-        &#34;startTime&#34;: xx,       (numeric) the minimum median time past of a block at which the bit gains its meaning
-        &#34;timeout&#34;: xx,         (numeric) the median time past of a block at which the deployment is considered failed if not yet locked in
-        &#34;since&#34;: xx,           (numeric) height of the first block to which the status applies
-        &#34;statistics&#34;: {        (object) numeric statistics about BIP9 signalling for a softfork (only for &#34;started&#34; status)
-           &#34;period&#34;: xx,       (numeric) the length in blocks of the BIP9 signalling period 
-           &#34;threshold&#34;: xx,    (numeric) the number of blocks with the version bit set required to activate the feature 
-           &#34;elapsed&#34;: xx,      (numeric) the number of blocks elapsed since the beginning of the current period 
-           &#34;count&#34;: xx,        (numeric) the number of blocks with the version bit set in the current period 
-           &#34;possible&#34;: xx      (boolean) returns false if there are not enough blocks left in this period to pass activation threshold 
+  &#34;bip9_softforks&#34;: {           (object) status of BIP9 softforks in progress
+     &#34;xxxx&#34; : {                 (string) name of the softfork
+        &#34;status&#34;: &#34;xxxx&#34;,       (string) one of &#34;defined&#34;, &#34;started&#34;, &#34;locked_in&#34;, &#34;active&#34;, &#34;failed&#34;
+        &#34;bit&#34;: xx,              (numeric) the bit (0-28) in the block version field used to signal this softfork (only for &#34;started&#34; status)
+        &#34;startTime&#34;: xx,        (numeric) the minimum median time past of a block at which the bit gains its meaning
+        &#34;timeout&#34;: xx,          (numeric) the median time past of a block at which the deployment is considered failed if not yet locked in
+        &#34;since&#34;: xx,            (numeric) height of the first block to which the status applies
+        &#34;statistics&#34;: {         (object) numeric statistics about BIP9 signalling for a softfork (only for &#34;started&#34; status)
+           &#34;period&#34;: xx,        (numeric) the length in blocks of the BIP9 signalling period 
+           &#34;threshold&#34;: xx,     (numeric) the number of blocks with the version bit set required to activate the feature 
+           &#34;elapsed&#34;: xx,       (numeric) the number of blocks elapsed since the beginning of the current period 
+           &#34;count&#34;: xx,         (numeric) the number of blocks with the version bit set in the current period 
+           &#34;possible&#34;: xx       (boolean) returns false if there are not enough blocks left in this period to pass activation threshold 
         }
      }
   }
+  &#34;warnings&#34; : &#34;...&#34;,           (string) any network and blockchain warnings.
 }
 
 Examples:
@@ -87,7 +93,7 @@ Examples:
           This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
           </p>
           <p>
-          Particl version: 0.15.2.1 
+          Particl version: 0.16.0.1 
           </p>
           <p>
           Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
@@ -208,6 +214,9 @@ Examples:
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="savemempool.html">savemempool</a>
+                  <br>
+                
                   <a href="verifychain.html">verifychain</a>
                   <br>
                 
@@ -224,13 +233,13 @@ Examples:
               </div>
               <div class="card-body">
                 
-                  <a href="getinfo.html">getinfo</a>
-                  <br>
-                
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
                   <a href="help.html">help</a>
+                  <br>
+                
+                  <a href="logging.html">logging</a>
                   <br>
                 
                   <a href="stop.html">stop</a>
@@ -402,7 +411,10 @@ Examples:
               </div>
               <div class="card-body">
                 
-                  <a href="smsgaddkey.html">smsgaddkey</a>
+                  <a href="smsg.html">smsg</a>
+                  <br>
+                
+                  <a href="smsgaddaddress.html">smsgaddaddress</a>
                   <br>
                 
                   <a href="smsgaddlocaladdress.html">smsgaddlocaladdress</a>
@@ -418,6 +430,9 @@ Examples:
                   <br>
                 
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimportprivkey.html">smsgimportprivkey</a>
                   <br>
                 
                   <a href="smsginbox.html">smsginbox</a>
@@ -445,6 +460,40 @@ Examples:
                   <br>
                 
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
+                Usbdevice
+              </div>
+              <div class="card-body">
+                
+                  <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="devicesignmessage.html">devicesignmessage</a>
+                  <br>
+                
+                  <a href="devicesignrawtransaction.html">devicesignrawtransaction</a>
+                  <br>
+                
+                  <a href="getdeviceinfo.html">getdeviceinfo</a>
+                  <br>
+                
+                  <a href="getdevicepublickey.html">getdevicepublickey</a>
+                  <br>
+                
+                  <a href="getdevicexpub.html">getdevicexpub</a>
+                  <br>
+                
+                  <a href="initaccountfromdevice.html">initaccountfromdevice</a>
+                  <br>
+                
+                  <a href="listdevices.html">listdevices</a>
                   <br>
                 
               </div>
@@ -504,6 +553,9 @@ Examples:
                   <br>
                 
                   <a href="clearwallettransactions.html">clearwallettransactions</a>
+                  <br>
+                
+                  <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
                   <a href="debugwallet.html">debugwallet</a>
@@ -605,9 +657,6 @@ Examples:
                   <a href="importwallet.html">importwallet</a>
                   <br>
                 
-                  <a href="keyinfo.html">keyinfo</a>
-                  <br>
-                
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
@@ -657,6 +706,9 @@ Examples:
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
+                  <br>
+                
+                  <a href="rescanblockchain.html">rescanblockchain</a>
                   <br>
                 
                   <a href="reservebalance.html">reservebalance</a>

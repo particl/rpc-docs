@@ -34,7 +34,31 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>smsgsend - Particl RPC</h1>
           
-            <pre>smsgsend &lt;addrFrom&gt; &lt;addrTo&gt; &lt;message&gt;  (paid retention testfee)nSend an encrypted message from addrFrom to addrTo.
+            <pre>smsgsend &#34;address_from&#34; &#34;address_to&#34; &#34;message&#34; ( paid_msg days_retention testfee )
+Send an encrypted message from &#34;address_from&#34; to &#34;address_to&#34;.
+
+Arguments:
+1. &#34;address_from&#34;       (string, required) The address of the sender.
+2. &#34;address_to&#34;         (string, required) The address of the recipient.
+3. &#34;message&#34;            (string, required) The message.
+4. paid_msg             (bool, optional, default=false) Send as paid message.
+5. days_retention       (int, optional, default=1) Days paid message will be retained by network.
+6. testfee              (bool, optional, default=false) Don&#39;t send the message, only estimate the fee.
+7. fromfile             (bool, optional, default=false) Send file as message, path specified in &#34;message&#34;.
+8. decodehex            (bool, optional, default=false) Decode &#34;message&#34; from hex before sending.
+
+Result:
+{
+  &#34;result&#34;: &#34;Sent&#34;/&#34;Not Sent&#34;       (string) address of public key
+  &#34;msgid&#34;: &#34;...&#34;                    (string) if sent, a message identifier
+  &#34;txid&#34;: &#34;...&#34;                     (string) if paid_msg the txnid of the funding txn
+  &#34;fee&#34;: n                          (amount) if paid_msg the fee paid
+}
+
+Examples:
+&gt; particl-cli smsgsend &#34;myaddress&#34; &#34;toaddress&#34; &#34;message&#34;
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;smsgsend&#34;, &#34;params&#34;: [&#34;myaddress&#34;, &#34;toaddress&#34;, &#34;message&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+
 </pre>
             <hr>
           
@@ -42,7 +66,7 @@
           This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
           </p>
           <p>
-          Particl version: 0.15.2.1 
+          Particl version: 0.16.0.1 
           </p>
           <p>
           Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
@@ -163,6 +187,9 @@
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="savemempool.html">savemempool</a>
+                  <br>
+                
                   <a href="verifychain.html">verifychain</a>
                   <br>
                 
@@ -179,13 +206,13 @@
               </div>
               <div class="card-body">
                 
-                  <a href="getinfo.html">getinfo</a>
-                  <br>
-                
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
                   <a href="help.html">help</a>
+                  <br>
+                
+                  <a href="logging.html">logging</a>
                   <br>
                 
                   <a href="stop.html">stop</a>
@@ -357,7 +384,10 @@
               </div>
               <div class="card-body">
                 
-                  <a href="smsgaddkey.html">smsgaddkey</a>
+                  <a href="smsg.html">smsg</a>
+                  <br>
+                
+                  <a href="smsgaddaddress.html">smsgaddaddress</a>
                   <br>
                 
                   <a href="smsgaddlocaladdress.html">smsgaddlocaladdress</a>
@@ -373,6 +403,9 @@
                   <br>
                 
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimportprivkey.html">smsgimportprivkey</a>
                   <br>
                 
                   <a href="smsginbox.html">smsginbox</a>
@@ -400,6 +433,40 @@
                   <br>
                 
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
+                Usbdevice
+              </div>
+              <div class="card-body">
+                
+                  <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="devicesignmessage.html">devicesignmessage</a>
+                  <br>
+                
+                  <a href="devicesignrawtransaction.html">devicesignrawtransaction</a>
+                  <br>
+                
+                  <a href="getdeviceinfo.html">getdeviceinfo</a>
+                  <br>
+                
+                  <a href="getdevicepublickey.html">getdevicepublickey</a>
+                  <br>
+                
+                  <a href="getdevicexpub.html">getdevicexpub</a>
+                  <br>
+                
+                  <a href="initaccountfromdevice.html">initaccountfromdevice</a>
+                  <br>
+                
+                  <a href="listdevices.html">listdevices</a>
                   <br>
                 
               </div>
@@ -459,6 +526,9 @@
                   <br>
                 
                   <a href="clearwallettransactions.html">clearwallettransactions</a>
+                  <br>
+                
+                  <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
                   <a href="debugwallet.html">debugwallet</a>
@@ -560,9 +630,6 @@
                   <a href="importwallet.html">importwallet</a>
                   <br>
                 
-                  <a href="keyinfo.html">keyinfo</a>
-                  <br>
-                
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
@@ -612,6 +679,9 @@
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
+                  <br>
+                
+                  <a href="rescanblockchain.html">rescanblockchain</a>
                   <br>
                 
                   <a href="reservebalance.html">reservebalance</a>
