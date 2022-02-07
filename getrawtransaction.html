@@ -55,59 +55,62 @@ Arguments:
 3. blockhash    (string, optional) The block in which to look for the transaction
 
 Result (if verbose is not set or set to false):
-&#34;data&#34;      (string) The serialized, hex-encoded data for &#39;txid&#39;
+&#34;str&#34;    (string) The serialized, hex-encoded data for &#39;txid&#39;
 
 Result (if verbose is set to true):
-{
-  &#34;in_active_chain&#34;: b, (bool) Whether specified block is in the active chain or not (only present with explicit &#34;blockhash&#34; argument)
-  &#34;hex&#34; : &#34;data&#34;,       (string) The serialized, hex-encoded data for &#39;txid&#39;
-  &#34;txid&#34; : &#34;id&#34;,        (string) The transaction id (same as provided)
-  &#34;hash&#34; : &#34;id&#34;,        (string) The transaction hash (differs from txid for witness transactions)
-  &#34;size&#34; : n,             (numeric) The serialized transaction size
-  &#34;vsize&#34; : n,            (numeric) The virtual transaction size (differs from size for witness transactions)
-  &#34;weight&#34; : n,           (numeric) The transaction&#39;s weight (between vsize*4-3 and vsize*4)
-  &#34;version&#34; : n,          (numeric) The version
-  &#34;locktime&#34; : ttt,       (numeric) The lock time
-  &#34;vin&#34; : [               (array of json objects)
-     {
-       &#34;txid&#34;: &#34;id&#34;,    (string) The transaction id
-       &#34;vout&#34;: n,         (numeric) 
-       &#34;scriptSig&#34;: {     (json object) The script
-         &#34;asm&#34;: &#34;asm&#34;,  (string) asm
-         &#34;hex&#34;: &#34;hex&#34;   (string) hex
-       },
-       &#34;sequence&#34;: n      (numeric) The script sequence number
-       &#34;txinwitness&#34;: [&#34;hex&#34;, ...] (array of string) hex-encoded witness data (if any)
-     }
-     ,...
+{                                    (json object)
+  &#34;in_active_chain&#34; : true|false,    (boolean) Whether specified block is in the active chain or not (only present with explicit &#34;blockhash&#34; argument)
+  &#34;hex&#34; : &#34;hex&#34;,                     (string) The serialized, hex-encoded data for &#39;txid&#39;
+  &#34;txid&#34; : &#34;hex&#34;,                    (string) The transaction id (same as provided)
+  &#34;hash&#34; : &#34;hex&#34;,                    (string) The transaction hash (differs from txid for witness transactions)
+  &#34;size&#34; : n,                        (numeric) The serialized transaction size
+  &#34;vsize&#34; : n,                       (numeric) The virtual transaction size (differs from size for witness transactions)
+  &#34;weight&#34; : n,                      (numeric) The transaction&#39;s weight (between vsize*4-3 and vsize*4)
+  &#34;version&#34; : n,                     (numeric) The version
+  &#34;locktime&#34; : xxx,                  (numeric) The lock time
+  &#34;vin&#34; : [                          (json array)
+    {                                (json object)
+      &#34;txid&#34; : &#34;hex&#34;,                (string) The transaction id
+      &#34;vout&#34; : n,                    (numeric) The output number
+      &#34;scriptSig&#34; : {                (json object) The script
+        &#34;asm&#34; : &#34;str&#34;,               (string) asm
+        &#34;hex&#34; : &#34;hex&#34;                (string) hex
+      },
+      &#34;sequence&#34; : n,                (numeric) The script sequence number
+      &#34;txinwitness&#34; : [              (json array)
+        &#34;hex&#34;,                       (string) hex-encoded witness data (if any)
+        ...
+      ]
+    },
+    ...
   ],
-  &#34;vout&#34; : [              (array of json objects)
-     {
-       &#34;value&#34; : x.xxx,            (numeric) The value in PART
-       &#34;n&#34; : n,                    (numeric) index
-       &#34;scriptPubKey&#34; : {          (json object)
-         &#34;asm&#34; : &#34;asm&#34;,          (string) the asm
-         &#34;hex&#34; : &#34;hex&#34;,          (string) the hex
-         &#34;reqSigs&#34; : n,            (numeric) The required sigs
-         &#34;type&#34; : &#34;pubkeyhash&#34;,  (string) The type, eg &#39;pubkeyhash&#39;
-         &#34;addresses&#34; : [           (json array of string)
-           &#34;address&#34;               (string) particl address
-           ,...
-         ]
-       }
-     }
-     ,...
+  &#34;vout&#34; : [                         (json array)
+    {                                (json object)
+      &#34;value&#34; : n,                   (numeric) The value in PART
+      &#34;n&#34; : n,                       (numeric) index
+      &#34;scriptPubKey&#34; : {             (json object)
+        &#34;asm&#34; : &#34;str&#34;,               (string) the asm
+        &#34;hex&#34; : &#34;str&#34;,               (string) the hex
+        &#34;reqSigs&#34; : n,               (numeric) The required sigs
+        &#34;type&#34; : &#34;str&#34;,              (string) The type, eg &#39;pubkeyhash&#39;
+        &#34;addresses&#34; : [              (json array)
+          &#34;str&#34;,                     (string) particl address
+          ...
+        ]
+      }
+    },
+    ...
   ],
-  &#34;blockhash&#34; : &#34;hash&#34;,   (string) the block hash
-  &#34;confirmations&#34; : n,      (numeric) The confirmations
-  &#34;blocktime&#34; : ttt         (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)
-  &#34;time&#34; : ttt,             (numeric) Same as &#34;blocktime&#34;
+  &#34;blockhash&#34; : &#34;hex&#34;,               (string) the block hash
+  &#34;confirmations&#34; : n,               (numeric) The confirmations
+  &#34;blocktime&#34; : xxx,                 (numeric) The block time expressed in UNIX epoch time
+  &#34;time&#34; : n                         (numeric) Same as &#34;blocktime&#34;
 }
 
 Examples:
 &gt; particl-cli getrawtransaction &#34;mytxid&#34;
 &gt; particl-cli getrawtransaction &#34;mytxid&#34; true
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;getrawtransaction&#34;, &#34;params&#34;: [&#34;mytxid&#34;, true] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;getrawtransaction&#34;, &#34;params&#34;: [&#34;mytxid&#34;, true]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 &gt; particl-cli getrawtransaction &#34;mytxid&#34; false &#34;myblockhash&#34;
 &gt; particl-cli getrawtransaction &#34;mytxid&#34; true &#34;myblockhash&#34;
 
@@ -115,7 +118,7 @@ Examples:
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -218,7 +221,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -231,6 +234,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -329,7 +335,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -688,6 +700,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -821,6 +836,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -890,6 +908,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -899,31 +920,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -954,6 +978,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

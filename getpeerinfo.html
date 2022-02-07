@@ -39,69 +39,96 @@
 Returns data about each connected network node as a json array of objects.
 
 Result:
-[
-  {
-    &#34;id&#34;: n,                   (numeric) Peer index
-    &#34;addr&#34;:&#34;host:port&#34;,      (string) The IP address and port of the peer
-    &#34;addrbind&#34;:&#34;ip:port&#34;,    (string) Bind address of the connection to the peer
-    &#34;addrlocal&#34;:&#34;ip:port&#34;,   (string) Local address as reported by the peer
-    &#34;services&#34;:&#34;xxxxxxxxxxxxxxxx&#34;,   (string) The services offered
-    &#34;servicesnames&#34;:[              (array) the services offered, in human-readable form
-        &#34;SERVICE_NAME&#34;,         (string) the service name if it is recognised
-         ...
-     ],
-    &#34;relaytxes&#34;:true|false,    (boolean) Whether peer has asked us to relay transactions to it
-    &#34;lastsend&#34;: ttt,           (numeric) The time in seconds since epoch (Jan 1 1970 GMT) of the last send
-    &#34;lastrecv&#34;: ttt,           (numeric) The time in seconds since epoch (Jan 1 1970 GMT) of the last receive
-    &#34;bytessent&#34;: n,            (numeric) The total bytes sent
-    &#34;bytesrecv&#34;: n,            (numeric) The total bytes received
-    &#34;conntime&#34;: ttt,           (numeric) The connection time in seconds since epoch (Jan 1 1970 GMT)
-    &#34;timeoffset&#34;: ttt,         (numeric) The time offset in seconds
-    &#34;pingtime&#34;: n,             (numeric) ping time (if available)
-    &#34;minping&#34;: n,              (numeric) minimum observed ping time (if any at all)
-    &#34;pingwait&#34;: n,             (numeric) ping wait (if non-zero)
-    &#34;version&#34;: v,              (numeric) The peer version, such as 70001
-    &#34;subver&#34;: &#34;/Satoshi:0.8.5/&#34;,  (string) The string version
-    &#34;inbound&#34;: true|false,     (boolean) Inbound (true) or Outbound (false)
-    &#34;addnode&#34;: true|false,     (boolean) Whether connection was due to addnode/-connect or if it was an automatic/inbound connection
-    &#34;startingheight&#34;: n,       (numeric) The starting height (block) of the peer
-    &#34;currentheight&#34;: n,        (numeric) The current height (block) reported by the peer
-    &#34;banscore&#34;: n,             (numeric) The ban score
-    &#34;synced_headers&#34;: n,       (numeric) The last header we have in common with this peer
-    &#34;synced_blocks&#34;: n,        (numeric) The last block we have in common with this peer
-    &#34;duplicate_count&#34;: n,      (numeric) The number of already received blocks or headers sent by this peer
-    &#34;loose_headers&#34;: n,        (numeric) The number of block headers without blocks sent by this peer
-    &#34;inflight&#34;: [
-       n,                        (numeric) The heights of blocks we&#39;re currently asking from this peer
-       ...
+[                                  (json array)
+  {                                (json object)
+    &#34;id&#34; : n,                      (numeric) Peer index
+    &#34;addr&#34; : &#34;str&#34;,                (string) (host:port) The IP address and port of the peer
+    &#34;addrbind&#34; : &#34;str&#34;,            (string) (ip:port) Bind address of the connection to the peer
+    &#34;addrlocal&#34; : &#34;str&#34;,           (string) (ip:port) Local address as reported by the peer
+    &#34;network&#34; : &#34;str&#34;,             (string) Network (ipv4, ipv6, or onion) the peer connected through
+    &#34;mapped_as&#34; : n,               (numeric) The AS in the BGP route to the peer used for diversifying
+                                   peer selection (only available if the asmap config flag is set)
+    &#34;services&#34; : &#34;hex&#34;,            (string) The services offered
+    &#34;servicesnames&#34; : [            (json array) the services offered, in human-readable form
+      &#34;str&#34;,                       (string) the service name if it is recognised
+      ...
     ],
-    &#34;whitelisted&#34;: true|false, (boolean) Whether the peer is whitelisted
-    &#34;minfeefilter&#34;: n,         (numeric) The minimum fee rate for transactions this peer accepts
-    &#34;bytessent_per_msg&#34;: {
-       &#34;msg&#34;: n,               (numeric) The total bytes sent aggregated by message type
-                               When a message type is not listed in this json object, the bytes sent are 0.
-                               Only known message types can appear as keys in the object.
-       ...
+    &#34;relaytxes&#34; : true|false,      (boolean) Whether peer has asked us to relay transactions to it
+    &#34;lastsend&#34; : xxx,              (numeric) The UNIX epoch time of the last send
+    &#34;lastrecv&#34; : xxx,              (numeric) The UNIX epoch time of the last receive
+    &#34;last_transaction&#34; : xxx,      (numeric) The UNIX epoch time of the last valid transaction received from this peer
+    &#34;last_block&#34; : xxx,            (numeric) The UNIX epoch time of the last block received from this peer
+    &#34;bytessent&#34; : n,               (numeric) The total bytes sent
+    &#34;bytesrecv&#34; : n,               (numeric) The total bytes received
+    &#34;conntime&#34; : xxx,              (numeric) The UNIX epoch time of the connection
+    &#34;timeoffset&#34; : n,              (numeric) The time offset in seconds
+    &#34;pingtime&#34; : n,                (numeric) ping time (if available)
+    &#34;minping&#34; : n,                 (numeric) minimum observed ping time (if any at all)
+    &#34;pingwait&#34; : n,                (numeric) ping wait (if non-zero)
+    &#34;version&#34; : n,                 (numeric) The peer version, such as 70001
+    &#34;subver&#34; : &#34;str&#34;,              (string) The string version
+    &#34;inbound&#34; : true|false,        (boolean) Inbound (true) or Outbound (false)
+    &#34;addnode&#34; : true|false,        (boolean) Whether connection was due to addnode/-connect or if it was an automatic/inbound connection
+                                   (DEPRECATED, returned only if the config option -deprecatedrpc=getpeerinfo_addnode is passed)
+    &#34;connection_type&#34; : &#34;str&#34;,     (string) Type of connection: 
+                                   outbound-full-relay (default automatic connections),
+                                   block-relay-only (does not relay transactions or addresses),
+                                   inbound (initiated by the peer),
+                                   manual (added via addnode RPC or -addnode/-connect configuration options),
+                                   addr-fetch (short-lived automatic connection for soliciting addresses),
+                                   feeler (short-lived automatic connection for testing addresses).
+                                   Please note this output is unlikely to be stable in upcoming releases as we iterate to
+                                   best capture connection behaviors.
+    &#34;startingheight&#34; : n,          (numeric) The starting height (block) of the peer
+    &#34;currentheight&#34; : n,           (numeric) The current height (block) of the peer
+    &#34;banscore&#34; : n,                (numeric) The ban score (DEPRECATED, returned only if config option -deprecatedrpc=banscore is passed)
+    &#34;synced_headers&#34; : n,          (numeric) The last header we have in common with this peer
+    &#34;synced_blocks&#34; : n,           (numeric) The last block we have in common with this peer
+    &#34;duplicate_count&#34; : n,         (numeric) The number of already received blocks or headers sent by this peer
+    &#34;loose_headers&#34; : n,           (numeric) The number of block headers without blocks sent by this peer
+    &#34;inflight&#34; : [                 (json array)
+      n,                           (numeric) The heights of blocks we&#39;re currently asking from this peer
+      ...
+    ],
+    &#34;whitelisted&#34; : true|false,    (boolean, optional) Whether the peer is whitelisted with default permissions
+                                   (DEPRECATED, returned only if config option -deprecatedrpc=whitelisted is passed)
+    &#34;permissions&#34; : [              (json array) Any special permissions that have been granted to this peer
+      &#34;str&#34;,                       (string) bloomfilter (allow requesting BIP37 filtered blocks and transactions),
+                                   noban (do not ban for misbehavior; implies download),
+                                   forcerelay (relay transactions that are already in the mempool; implies relay),
+                                   relay (relay even in -blocksonly mode, and unlimited transaction announcements),
+                                   mempool (allow requesting BIP35 mempool contents),
+                                   download (allow getheaders during IBD, no disconnect after maxuploadtarget limit),
+                                   addr (responses to GETADDR avoid hitting the cache and contain random records with the most up-to-date info).
+                                   
+      ...
+    ],
+    &#34;minfeefilter&#34; : n,            (numeric) The minimum fee rate for transactions this peer accepts
+    &#34;bytessent_per_msg&#34; : {        (json object)
+      &#34;msg&#34; : n,                   (numeric) The total bytes sent aggregated by message type
+                                   When a message type is not listed in this json object, the bytes sent are 0.
+                                   Only known message types can appear as keys in the object.
+      ...
     },
-    &#34;bytesrecv_per_msg&#34;: {
-       &#34;msg&#34;: n,               (numeric) The total bytes received aggregated by message type
-                               When a message type is not listed in this json object, the bytes received are 0.
-                               Only known message types can appear as keys in the object and all bytes received of unknown message types are listed under &#39;*other*&#39;.
-       ...
+    &#34;bytesrecv_per_msg&#34; : {        (json object)
+      &#34;msg&#34; : n                    (numeric) The total bytes received aggregated by message type
+                                   When a message type is not listed in this json object, the bytes received are 0.
+                                   Only known message types can appear as keys in the object and all bytes received
+                                   of unknown message types are listed under &#39;*other*&#39;.
     }
-  }
-  ,...
+  },
+  ...
 ]
 
 Examples:
 &gt; particl-cli getpeerinfo 
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;getpeerinfo&#34;, &#34;params&#34;: [] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;getpeerinfo&#34;, &#34;params&#34;: []}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -204,7 +231,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -217,6 +244,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -315,7 +345,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -674,6 +710,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -807,6 +846,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -876,6 +918,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -885,31 +930,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -940,6 +988,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

@@ -49,53 +49,55 @@ Arguments:
      ]
 
 Result:
-{                           (json object)
-  &#34;avgfee&#34;: xxxxx,          (numeric) Average fee in the block
-  &#34;avgfeerate&#34;: xxxxx,      (numeric) Average feerate (in satoshis per virtual byte)
-  &#34;avgtxsize&#34;: xxxxx,       (numeric) Average transaction size
-  &#34;blockhash&#34;: xxxxx,       (string) The block hash (to check for potential reorgs)
-  &#34;feerate_percentiles&#34;: [  (array of numeric) Feerates at the 10th, 25th, 50th, 75th, and 90th percentile weight unit (in satoshis per virtual byte)
-      &#34;10th_percentile_feerate&#34;,      (numeric) The 10th percentile feerate
-      &#34;25th_percentile_feerate&#34;,      (numeric) The 25th percentile feerate
-      &#34;50th_percentile_feerate&#34;,      (numeric) The 50th percentile feerate
-      &#34;75th_percentile_feerate&#34;,      (numeric) The 75th percentile feerate
-      &#34;90th_percentile_feerate&#34;,      (numeric) The 90th percentile feerate
+{                              (json object)
+  &#34;avgfee&#34; : n,                (numeric) Average fee in the block
+  &#34;avgfeerate&#34; : n,            (numeric) Average feerate (in satoshis per virtual byte)
+  &#34;avgtxsize&#34; : n,             (numeric) Average transaction size
+  &#34;blockhash&#34; : &#34;hex&#34;,         (string) The block hash (to check for potential reorgs)
+  &#34;feerate_percentiles&#34; : [    (json array) Feerates at the 10th, 25th, 50th, 75th, and 90th percentile weight unit (in satoshis per virtual byte)
+    n,                         (numeric) The 10th percentile feerate
+    n,                         (numeric) The 25th percentile feerate
+    n,                         (numeric) The 50th percentile feerate
+    n,                         (numeric) The 75th percentile feerate
+    n                          (numeric) The 90th percentile feerate
   ],
-  &#34;height&#34;: xxxxx,          (numeric) The height of the block
-  &#34;ins&#34;: xxxxx,             (numeric) The number of inputs (including coinbase)
-  &#34;maxfee&#34;: xxxxx,          (numeric) Maximum fee in the block
-  &#34;maxfeerate&#34;: xxxxx,      (numeric) Maximum feerate (in satoshis per virtual byte)
-  &#34;maxtxsize&#34;: xxxxx,       (numeric) Maximum transaction size
-  &#34;medianfee&#34;: xxxxx,       (numeric) Truncated median fee in the block
-  &#34;mediantime&#34;: xxxxx,      (numeric) The block median time past
-  &#34;mediantxsize&#34;: xxxxx,    (numeric) Truncated median transaction size
-  &#34;minfee&#34;: xxxxx,          (numeric) Minimum fee in the block
-  &#34;minfeerate&#34;: xxxxx,      (numeric) Minimum feerate (in satoshis per virtual byte)
-  &#34;mintxsize&#34;: xxxxx,       (numeric) Minimum transaction size
-  &#34;outs&#34;: xxxxx,            (numeric) The number of outputs
-  &#34;subsidy&#34;: xxxxx,         (numeric) The block subsidy
-  &#34;swtotal_size&#34;: xxxxx,    (numeric) Total size of all segwit transactions
-  &#34;swtotal_weight&#34;: xxxxx,  (numeric) Total weight of all segwit transactions divided by segwit scale factor (4)
-  &#34;swtxs&#34;: xxxxx,           (numeric) The number of segwit transactions
-  &#34;time&#34;: xxxxx,            (numeric) The block time
-  &#34;total_out&#34;: xxxxx,       (numeric) Total amount in all outputs (excluding coinbase and thus reward [ie subsidy &#43; totalfee])
-  &#34;total_size&#34;: xxxxx,      (numeric) Total size of all non-coinbase transactions
-  &#34;total_weight&#34;: xxxxx,    (numeric) Total weight of all non-coinbase transactions divided by segwit scale factor (4)
-  &#34;totalfee&#34;: xxxxx,        (numeric) The fee total
-  &#34;txs&#34;: xxxxx,             (numeric) The number of transactions (excluding coinbase)
-  &#34;utxo_increase&#34;: xxxxx,   (numeric) The increase/decrease in the number of unspent outputs
-  &#34;utxo_size_inc&#34;: xxxxx,   (numeric) The increase/decrease in size for the utxo index (not discounting op_return and similar)
+  &#34;height&#34; : n,                (numeric) The height of the block
+  &#34;ins&#34; : n,                   (numeric) The number of inputs (excluding coinbase)
+  &#34;maxfee&#34; : n,                (numeric) Maximum fee in the block
+  &#34;maxfeerate&#34; : n,            (numeric) Maximum feerate (in satoshis per virtual byte)
+  &#34;maxtxsize&#34; : n,             (numeric) Maximum transaction size
+  &#34;medianfee&#34; : n,             (numeric) Truncated median fee in the block
+  &#34;mediantime&#34; : n,            (numeric) The block median time past
+  &#34;mediantxsize&#34; : n,          (numeric) Truncated median transaction size
+  &#34;minfee&#34; : n,                (numeric) Minimum fee in the block
+  &#34;minfeerate&#34; : n,            (numeric) Minimum feerate (in satoshis per virtual byte)
+  &#34;mintxsize&#34; : n,             (numeric) Minimum transaction size
+  &#34;outs&#34; : n,                  (numeric) The number of outputs
+  &#34;subsidy&#34; : n,               (numeric) The block subsidy
+  &#34;swtotal_size&#34; : n,          (numeric) Total size of all segwit transactions
+  &#34;swtotal_weight&#34; : n,        (numeric) Total weight of all segwit transactions
+  &#34;swtxs&#34; : n,                 (numeric) The number of segwit transactions
+  &#34;time&#34; : n,                  (numeric) The block time
+  &#34;total_out&#34; : n,             (numeric) Total amount in all outputs (excluding coinbase and thus reward [ie subsidy &#43; totalfee])
+  &#34;total_size&#34; : n,            (numeric) Total size of all non-coinbase transactions
+  &#34;total_weight&#34; : n,          (numeric) Total weight of all non-coinbase transactions
+  &#34;totalfee&#34; : n,              (numeric) The fee total
+  &#34;txs&#34; : n,                   (numeric) The number of transactions (including coinbase)
+  &#34;utxo_increase&#34; : n,         (numeric) The increase/decrease in the number of unspent outputs
+  &#34;utxo_size_inc&#34; : n          (numeric) The increase/decrease in size for the utxo index (not discounting op_return and similar)
 }
 
 Examples:
+&gt; particl-cli getblockstats &#39;&#34;00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09&#34;&#39; &#39;[&#34;minfeerate&#34;,&#34;avgfeerate&#34;]&#39;
 &gt; particl-cli getblockstats 1000 &#39;[&#34;minfeerate&#34;,&#34;avgfeerate&#34;]&#39;
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;getblockstats&#34;, &#34;params&#34;: [1000 &#39;[&#34;minfeerate&#34;,&#34;avgfeerate&#34;]&#39;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;getblockstats&#34;, &#34;params&#34;: [&#34;00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09&#34;, [&#34;minfeerate&#34;,&#34;avgfeerate&#34;]]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;getblockstats&#34;, &#34;params&#34;: [1000, [&#34;minfeerate&#34;,&#34;avgfeerate&#34;]]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -198,7 +200,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -211,6 +213,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -309,7 +314,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -668,6 +679,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -801,6 +815,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -870,6 +887,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -879,31 +899,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -934,6 +957,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

@@ -34,21 +34,27 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>unloadwallet - Particl RPC</h1>
           
-            <pre>unloadwallet ( &#34;wallet_name&#34; )
+            <pre>unloadwallet ( &#34;wallet_name&#34; load_on_startup )
 Unloads the wallet referenced by the request endpoint otherwise unloads the wallet specified in the argument.
 Specifying the wallet name on a wallet endpoint is invalid.
 Arguments:
-1. wallet_name    (string, optional, default=the wallet name from the RPC request) The name of the wallet to unload.
+1. wallet_name        (string, optional, default=the wallet name from the RPC endpoint) The name of the wallet to unload. Must be provided in the RPC endpoint or this parameter (but not both).
+2. load_on_startup    (boolean, optional, default=null) Save wallet name to persistent settings and load on startup. True to add wallet to startup list, false to remove, null to leave unchanged.
+
+Result:
+{                       (json object)
+  &#34;warning&#34; : &#34;str&#34;     (string) Warning message if wallet was not unloaded cleanly.
+}
 
 Examples:
 &gt; particl-cli unloadwallet wallet_name
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;unloadwallet&#34;, &#34;params&#34;: [wallet_name] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;unloadwallet&#34;, &#34;params&#34;: [wallet_name]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -151,7 +157,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -164,6 +170,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -262,7 +271,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -621,6 +636,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -754,6 +772,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -823,6 +844,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -832,31 +856,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -887,6 +914,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

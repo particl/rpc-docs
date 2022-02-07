@@ -34,9 +34,10 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>sendtypeto - Particl RPC</h1>
           
-            <pre>sendtypeto &#34;typein&#34; &#34;typeout&#34; [{&#34;address&#34;:&#34;str&#34;,&#34;amount&#34;:amount,&#34;narr&#34;:&#34;str&#34;,&#34;blindingfactor&#34;:&#34;hex&#34;,&#34;subfee&#34;:bool,&#34;script&#34;:&#34;hex&#34;,&#34;stakeaddress&#34;:&#34;str&#34;},...] ( &#34;comment&#34; &#34;comment_to&#34; ringsize inputs_per_sig test_fee {&#34;changeaddress&#34;:&#34;str&#34;,&#34;inputs&#34;:[{&#34;tx&#34;:&#34;hex&#34;,&#34;n&#34;:n},...],&#34;replaceable&#34;:bool,&#34;conf_target&#34;:n,&#34;estimate_mode&#34;:&#34;str&#34;,&#34;avoid_reuse&#34;:bool,&#34;feeRate&#34;:amount,&#34;blind_watchonly_visible&#34;:bool,&#34;spend_frozen_blinded&#34;:bool,&#34;test_mempool_accept&#34;:bool,&#34;use_mixins&#34;:[ao_index,...],&#34;mixin_selection_mode&#34;:n,&#34;show_hex&#34;:bool,&#34;show_fee&#34;:bool,&#34;submit_tx&#34;:bool} )
+            <pre>sendtypeto &#34;typein&#34; &#34;typeout&#34; [{&#34;address&#34;:&#34;str&#34;,&#34;amount&#34;:amount,&#34;narr&#34;:&#34;str&#34;,&#34;blindingfactor&#34;:&#34;hex&#34;,&#34;subfee&#34;:bool,&#34;script&#34;:&#34;hex&#34;,&#34;stakeaddress&#34;:&#34;str&#34;},...] ( &#34;comment&#34; &#34;comment_to&#34; ringsize inputs_per_sig test_fee {&#34;changeaddress&#34;:&#34;str&#34;,&#34;inputs&#34;:[{&#34;tx&#34;:&#34;hex&#34;,&#34;n&#34;:n},...],&#34;replaceable&#34;:bool,&#34;conf_target&#34;:n,&#34;estimate_mode&#34;:&#34;str&#34;,&#34;avoid_reuse&#34;:bool,&#34;feeRate&#34;:amount,&#34;blind_watchonly_visible&#34;:bool,&#34;spend_frozen_blinded&#34;:bool,&#34;test_mempool_accept&#34;:bool,&#34;use_mixins&#34;:[ao_index,...],&#34;mixin_selection_mode&#34;:n,&#34;show_hex&#34;:bool,&#34;show_fee&#34;:bool,&#34;submit_tx&#34;:bool,&#34;includeWatching&#34;:bool,&#34;minimumAmount&#34;:amount,&#34;maximumAmount&#34;:amount} )
 
 Send part to multiple outputs.
+Requires wallet passphrase to be set with walletpassphrase call if wallet is encrypted.
 
 Arguments:
 1. typein                                  (string, required) part/blind/anon
@@ -93,10 +94,13 @@ Arguments:
        &#34;show_hex&#34;: bool,                   (boolean, optional, default=false) Display the hex encoded tx
        &#34;show_fee&#34;: bool,                   (boolean, optional, default=false) Return the fee
        &#34;submit_tx&#34;: bool,                  (boolean, optional, default=true) Send the tx
+       &#34;includeWatching&#34;: bool,            (boolean, optional, default=false) Also select inputs which are watch only.
+       &#34;minimumAmount&#34;: amount,            (numeric or string, optional, default=0) Minimum value of each UTXO to select in PART
+       &#34;maximumAmount&#34;: amount,            (numeric or string, optional, default=unlimited) Maximum value of each to select UTXO in PART
      }
 
 Result:
-&#34;txid&#34;              (string) The transaction id.
+&#34;hex&#34;    (string) The transaction id
 
 Examples:
 &gt; particl-cli sendtypeto anon part &#34;[{\&#34;address\&#34;:\&#34;PbpVcjgYatnkKgveaeqhkeQBFwjqR7jKBR\&#34;,\&#34;amount\&#34;:0.1}]&#34;
@@ -105,7 +109,7 @@ Examples:
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -208,7 +212,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -221,6 +225,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -319,7 +326,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -678,6 +691,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -811,6 +827,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -880,6 +899,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -889,31 +911,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -944,6 +969,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

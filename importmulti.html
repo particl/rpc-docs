@@ -50,7 +50,7 @@ Arguments:
        {                                                            (json object)
          &#34;desc&#34;: &#34;str&#34;,                                             (string) Descriptor to import. If using descriptor, do not also provide address/scriptPubKey, scripts, or pubkeys
          &#34;scriptPubKey&#34;: &#34;&lt;script&gt;&#34; | { &#34;address&#34;:&#34;&lt;address&gt;&#34; },    (string / json, required) Type of scriptPubKey (string for script, json for address). Should not be provided if using a descriptor
-         &#34;timestamp&#34;: timestamp | &#34;now&#34;,                            (integer / string, required) Creation time of the key in seconds since epoch (Jan 1 1970 GMT),
+         &#34;timestamp&#34;: timestamp | &#34;now&#34;,                            (integer / string, required) Creation time of the key expressed in UNIX epoch time,
                                                                     or the string &#34;now&#34; to substitute the current synced blockchain time. The timestamp of the oldest
                                                                     key will determine how far back blockchain rescans need to begin for missing wallet transactions.
                                                                     &#34;now&#34; can be specified to bypass scanning, for keys which are known to never have been used, and
@@ -80,9 +80,19 @@ Arguments:
      }
 
 Result:
-
-Response is an array with the same size as the input that has the execution result :
-  [{&#34;success&#34;: true}, {&#34;success&#34;: true, &#34;warnings&#34;: [&#34;Ignoring irrelevant private key&#34;]}, {&#34;success&#34;: false, &#34;error&#34;: {&#34;code&#34;: -1, &#34;message&#34;: &#34;Internal Server Error&#34;}}, ...]
+[                              (json array) Response is an array with the same size as the input that has the execution result
+  {                            (json object)
+    &#34;success&#34; : true|false,    (boolean)
+    &#34;warnings&#34; : [             (json array, optional)
+      &#34;str&#34;,                   (string)
+      ...
+    ],
+    &#34;error&#34; : {                (json object, optional)
+      ...                      JSONRPC error
+    }
+  },
+  ...
+]
 
 Examples:
 &gt; particl-cli importmulti &#39;[{ &#34;scriptPubKey&#34;: { &#34;address&#34;: &#34;&lt;my address&gt;&#34; }, &#34;timestamp&#34;:1455191478 }, { &#34;scriptPubKey&#34;: { &#34;address&#34;: &#34;&lt;my 2nd address&gt;&#34; }, &#34;label&#34;: &#34;example 2&#34;, &#34;timestamp&#34;: 1455191480 }]&#39;
@@ -92,7 +102,7 @@ Examples:
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -195,7 +205,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -208,6 +218,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -306,7 +319,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -665,6 +684,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -798,6 +820,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -867,6 +892,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -876,31 +904,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -931,6 +962,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

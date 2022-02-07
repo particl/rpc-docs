@@ -38,44 +38,45 @@
 Returns an object containing various wallet state info.
 
 Result:
-{
-  &#34;walletname&#34;: xxxxx,             (string) the wallet name
-  &#34;walletversion&#34;: xxxxx,          (numeric) the wallet version
-  &#34;total_balance&#34;: xxxxxxx,        (numeric) the total balance of the wallet in PART
-  &#34;balance&#34;: xxxxxxx,              (numeric) DEPRECATED. Identical to getbalances().mine.trusted
-  &#34;blind_balance&#34;: xxxxxxx,        (numeric) DEPRECATED. Identical to getbalances().mine.blind_trusted
-  &#34;anon_balance&#34;: xxxxxxx,         (numeric) DEPRECATED. Identical to getbalances().mine.anon_trusted
-  &#34;staked_balance&#34;: xxxxxxx,       (numeric) DEPRECATED. Identical to getbalances().mine.staked
-  &#34;unconfirmed_balance&#34;: xxx,      (numeric) DEPRECATED. Identical to getbalances().mine.untrusted_pending
-  &#34;immature_balance&#34;: xxxxxx,      (numeric) DEPRECATED. Identical to getbalances().mine.immature
-  &#34;immature_anon_balance&#34;: xxxxxxx,(numeric) DEPRECATED. Identical to getbalances().mine.anon_immature
-  &#34;reserve&#34;: xxxxxx,               (numeric) the reserve balance of the wallet in PART
-  &#34;txcount&#34;: xxxxxxx,              (numeric) the total number of transactions in the wallet
-  &#34;keypoololdest&#34;: xxxxxx,           (numeric) the timestamp (seconds since Unix epoch) of the oldest pre-generated key in the key pool
-  &#34;keypoolsize&#34;: xxxx,               (numeric) how many new keys are pre-generated (only counts external keys)
-  &#34;keypoolsize_hd_internal&#34;: xxxx,   (numeric) how many new keys are pre-generated for internal use (used for change outputs, only appears if the wallet is using this feature, otherwise external keys are used)
-  &#34;encryptionstatus&#34;:              (string) unencrypted/locked/unlocked
-  &#34;unlocked_until&#34;: ttt,           (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked
-  &#34;paytxfee&#34;: x.xxxx,              (numeric) the transaction fee configuration, set in PART/kB
-  &#34;hdseedid&#34;: &#34;&lt;hash160&gt;&#34;          (string, optional) the Hash160 of the HD account pubkey (only present when HD is enabled)
-  &#34;private_keys_enabled&#34;: true|false (boolean) false if privatekeys are disabled for this wallet (enforced watch-only wallet)
-  &#34;avoid_reuse&#34;: true|false          (boolean) whether this wallet tracks clean/dirty coins in terms of reuse
-  &#34;scanning&#34;:                        (json object) current scanning details, or false if no scan is in progress
-    {
-      &#34;duration&#34; : xxxx              (numeric) elapsed seconds since scan start
-      &#34;progress&#34; : x.xxxx,           (numeric) scanning progress percentage [0.0, 1.0]
-    }
+{                                         (json object)
+  &#34;walletname&#34; : &#34;str&#34;,                   (string) the wallet name
+  &#34;walletversion&#34; : n,                    (numeric) the wallet version
+  &#34;total_balance&#34; : n,                    (numeric) the total balance of the wallet in PART
+  &#34;format&#34; : &#34;str&#34;,                       (string) the database format (bdb or sqlite)
+  &#34;balance&#34; : n,                          (numeric) DEPRECATED. Identical to getbalances().mine.trusted
+  &#34;blind_balance&#34; : n,                    (numeric) DEPRECATED. Identical to getbalances().mine.blind_trusted
+  &#34;anon_balance&#34; : n,                     (numeric) DEPRECATED. Identical to getbalances().mine.anon_trusted
+  &#34;staked_balance&#34; : n,                   (numeric) DEPRECATED. Identical to getbalances().mine.staked
+  &#34;unconfirmed_balance&#34; : n,              (numeric) DEPRECATED. Identical to getbalances().mine.untrusted_pending
+  &#34;immature_balance&#34; : n,                 (numeric) DEPRECATED. Identical to getbalances().mine.immature
+  &#34;immature_anon_balance&#34; : n,            (numeric) DEPRECATED. Identical to getbalances().mine.anon_immature
+  &#34;reserve&#34; : n,                          (numeric) the reserve balance of the wallet in PART
+  &#34;txcount&#34; : n,                          (numeric) the total number of transactions in the wallet
+  &#34;keypoololdest&#34; : xxx,                  (numeric) the UNIX epoch time of the oldest pre-generated key in the key pool. Legacy wallets only.
+  &#34;keypoolsize&#34; : n,                      (numeric) how many new keys are pre-generated (only counts external keys)
+  &#34;keypoolsize_hd_internal&#34; : n,          (numeric) how many new keys are pre-generated for internal use (used for change outputs, only appears if the wallet is using this feature, otherwise external keys are used)
+  &#34;encryptionstatus&#34; : &#34;str&#34;,             (string) the encryption status of this wallet: unencrypted/locked/unlocked
+  &#34;unlocked_until&#34; : xxx,                 (numeric, optional) the UNIX epoch time until which the wallet is unlocked for transfers, or 0 if the wallet is locked (only present for passphrase-encrypted wallets)
+  &#34;paytxfee&#34; : n,                         (numeric) the transaction fee configuration, set in PART/kvB
+  &#34;hdseedid&#34; : &#34;hex&#34;,                     (string, optional) the Hash160 of the HD seed (only present when HD is enabled)
+  &#34;private_keys_enabled&#34; : true|false,    (boolean) false if privatekeys are disabled for this wallet (enforced watch-only wallet)
+  &#34;avoid_reuse&#34; : true|false,             (boolean) whether this wallet tracks clean/dirty coins in terms of reuse
+  &#34;scanning&#34; : {                          (json object) current scanning details, or false if no scan is in progress
+    &#34;duration&#34; : n,                       (numeric) elapsed seconds since scan start
+    &#34;progress&#34; : n                        (numeric) scanning progress percentage [0.0, 1.0]
+  },
+  &#34;descriptors&#34; : true|false              (boolean) whether this wallet uses descriptors for scriptPubKey management
 }
 
 Examples:
 &gt; particl-cli getwalletinfo 
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;getwalletinfo&#34;, &#34;params&#34;: [] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;getwalletinfo&#34;, &#34;params&#34;: []}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -178,7 +179,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -191,6 +192,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -289,7 +293,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -648,6 +658,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -781,6 +794,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -850,6 +866,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -859,31 +878,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -914,6 +936,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

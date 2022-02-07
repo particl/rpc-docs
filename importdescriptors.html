@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=1200px, shrink-to-fit=yes">
-    <meta name="description" content="Particl Core RPC Docs - sendblindtoanon">
+    <meta name="description" content="Particl Core RPC Docs - importdescriptors">
     <meta name="author" content="">
 
-    <title>sendblindtoanon - Particl Core RPC Docs</title>
+    <title>importdescriptors - Particl Core RPC Docs</title>
 
     <link href="./bootstrap.min.css" rel="stylesheet">
   </head>
@@ -32,36 +32,58 @@
 
       <div class="row">
         <div class="col-8 col-lg-9 col-xl-10">
-          <h1>sendblindtoanon - Particl RPC</h1>
+          <h1>importdescriptors - Particl RPC</h1>
           
-            <pre>sendblindtoanon &#34;address&#34; amount ( &#34;comment&#34; &#34;comment-to&#34; subtractfeefromamount &#34;narration&#34;)
+            <pre>importdescriptors &#34;requests&#34;
 
-Send an amount of blinded part in a blinded payment to a given address.
+Import descriptors. This will trigger a rescan of the blockchain based on the earliest timestamp of all descriptors being imported. Requires a new wallet backup.
+
+Note: This call can take over an hour to complete if using an early timestamp; during that time, other rpc calls
+may report that the imported keys, addresses or scripts exist but related transactions are still missing.
 
 Arguments:
-1. &#34;address&#34;     (string, required) The particl address to send to.
-2. &#34;amount&#34;      (numeric or string, required) The amount in PART to send. eg 0.1
-3. &#34;comment&#34;     (string, optional) A comment used to store what the transaction is for. 
-                            This is not part of the transaction, just kept in your wallet.
-4. &#34;comment_to&#34;  (string, optional) A comment to store the name of the person or organization 
-                            to which you&#39;re sending the transaction. This is not part of the 
-                            transaction, just kept in your wallet.
-5. subtractfeefromamount  (boolean, optional, default=false) The fee will be deducted from the amount being sent.
-                            The recipient will receive less PART than you enter in the amount field.
-6. &#34;narration&#34;   (string, optional) Up to 24 characters sent with the transaction.
-                            The narration is stored in the blockchain and is sent encrypted when destination is a stealth address and uncrypted otherwise.
+1. requests                                 (json array, required) Data to be imported
+     [
+       {                                    (json object)
+         &#34;desc&#34;: &#34;str&#34;,                     (string, required) Descriptor to import.
+         &#34;active&#34;: bool,                    (boolean, optional, default=false) Set this descriptor to be the active descriptor for the corresponding output type/externality
+         &#34;range&#34;: n or [n,n],               (numeric or array) If a ranged descriptor is used, this specifies the end or the range (in the form [begin,end]) to import
+         &#34;next_index&#34;: n,                   (numeric) If a ranged descriptor is set to active, this specifies the next index to generate addresses from
+         &#34;timestamp&#34;: timestamp | &#34;now&#34;,    (integer / string, required) Time from which to start rescanning the blockchain for this descriptor, in UNIX epoch time
+                                            Use the string &#34;now&#34; to substitute the current synced blockchain time.
+                                            &#34;now&#34; can be specified to bypass scanning, for outputs which are known to never have been used, and
+                                            0 can be specified to scan the entire blockchain. Blocks up to 2 hours before the earliest timestamp
+                                            of all descriptors being imported will be scanned.
+         &#34;internal&#34;: bool,                  (boolean, optional, default=false) Whether matching outputs should be treated as not incoming payments (e.g. change)
+         &#34;label&#34;: &#34;str&#34;,                    (string, optional, default=&#39;&#39;) Label to assign to the address, only allowed with internal=false
+       },
+       ...
+     ]
 
 Result:
-&#34;txid&#34;           (string) The transaction id.
+[                              (json array) Response is an array with the same size as the input that has the execution result
+  {                            (json object)
+    &#34;success&#34; : true|false,    (boolean)
+    &#34;warnings&#34; : [             (json array, optional)
+      &#34;str&#34;,                   (string)
+      ...
+    ],
+    &#34;error&#34; : {                (json object, optional)
+      ...                      JSONRPC error
+    }
+  },
+  ...
+]
 
 Examples:
-&gt; particl-cli sendblindtoanon &#34;SPGyji8uZFip6H15GUfj6bsutRVLsCyBFL3P7k7T7MUDRaYU8GfwUHpfxonLFAvAwr2RkigyGfTgWMfzLAAP8KMRHq7RE8cwpEEekH&#34; 0.1
+&gt; particl-cli importdescriptors &#39;[{ &#34;desc&#34;: &#34;&lt;my descriptor&gt;&#34;, &#34;timestamp&#34;:1455191478, &#34;internal&#34;: true }, { &#34;desc&#34;: &#34;&lt;my desccriptor 2&gt;&#34;, &#34;label&#34;: &#34;example 2&#34;, &#34;timestamp&#34;: 1455191480 }]&#39;
+&gt; particl-cli importdescriptors &#39;[{ &#34;desc&#34;: &#34;&lt;my descriptor&gt;&#34;, &#34;timestamp&#34;:1455191478, &#34;active&#34;: true, &#34;range&#34;: [0,100], &#34;label&#34;: &#34;&lt;my bech32 wallet&gt;&#34; }]&#39;
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -164,7 +186,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -177,6 +199,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -275,7 +300,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -634,6 +665,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -767,6 +801,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -836,6 +873,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -845,31 +885,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -900,6 +943,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

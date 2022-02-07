@@ -34,9 +34,10 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>sendtoaddress - Particl RPC</h1>
           
-            <pre>sendtoaddress &#34;address&#34; amount ( &#34;comment&#34; &#34;comment_to&#34; subtractfeefromamount &#34;narration&#34; replaceable conf_target &#34;estimate_mode&#34; avoid_reuse )
+            <pre>sendtoaddress &#34;address&#34; amount ( &#34;comment&#34; &#34;comment_to&#34; subtractfeefromamount &#34;narration&#34; replaceable conf_target &#34;estimate_mode&#34; avoid_reuse fee_rate verbose )
 
 Send an amount to a given address.
+Requires wallet passphrase to be set with walletpassphrase call if wallet is encrypted.
 
 Arguments:
 1. address                  (string, required) The particl address to send to.
@@ -51,28 +52,48 @@ Arguments:
 6. narration                (string, optional, default=) Up to 24 characters sent with the transaction.
                             Plaintext if sending to standard address type, encrypted when sending to stealthaddresses.
 7. replaceable              (boolean, optional, default=wallet default) Allow this transaction to be replaced by a transaction with higher fees via BIP 125
-8. conf_target              (numeric, optional, default=wallet default) Confirmation target (in blocks)
-9. estimate_mode            (string, optional, default=UNSET) The fee estimate mode, must be one of:
-                            &#34;UNSET&#34;
-                            &#34;ECONOMICAL&#34;
-                            &#34;CONSERVATIVE&#34;
+8. conf_target              (numeric, optional, default=wallet -txconfirmtarget) Confirmation target in blocks
+9. estimate_mode            (string, optional, default=unset) The fee estimate mode, must be one of (case insensitive):
+                            &#34;unset&#34;
+                            &#34;economical&#34;
+                            &#34;conservative&#34;
 10. avoid_reuse             (boolean, optional, default=true) (only available if avoid_reuse wallet flag is set) Avoid spending from dirty addresses; addresses are considered
                             dirty if they have previously been used in a transaction.
+11. fee_rate                (numeric or string, optional, default=not set, fall back to wallet fee estimation) Specify a fee rate in sat/vB.
+12. verbose                 (boolean, optional, default=false) If true, return extra information about the transaction.
 
-Result:
-&#34;txid&#34;                  (string) The transaction id.
+Result (if verbose is not set or set to false):
+&#34;hex&#34;    (string) The transaction id.
+
+Result (if verbose is set to true):
+{                          (json object)
+  &#34;txid&#34; : &#34;hex&#34;,          (string) The transaction id.
+  &#34;fee reason&#34; : &#34;str&#34;     (string) The transaction fee reason.
+}
 
 Examples:
-&gt; particl-cli sendtoaddress &#34;PbpVcjgYatnkKgveaeqhkeQBFwjqR7jKBR&#34; 0.1
-&gt; particl-cli sendtoaddress &#34;PbpVcjgYatnkKgveaeqhkeQBFwjqR7jKBR&#34; 0.1 &#34;donation&#34; &#34;seans outpost&#34;
-&gt; particl-cli sendtoaddress &#34;PbpVcjgYatnkKgveaeqhkeQBFwjqR7jKBR&#34; 0.1 &#34;&#34; &#34;&#34; true
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;sendtoaddress&#34;, &#34;params&#34;: [&#34;PbpVcjgYatnkKgveaeqhkeQBFwjqR7jKBR&#34;, 0.1, &#34;donation&#34;, &#34;seans outpost&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+
+Send 0.1 PART
+&gt; particl-cli sendtoaddress &#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc&#34; 0.1
+
+Send 0.1 PART with a confirmation target of 6 blocks in economical fee estimate mode using positional arguments
+&gt; particl-cli sendtoaddress &#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc&#34; 0.1 &#34;donation&#34; &#34;sean&#39;s outpost&#34; false true 6 economical
+
+Send 0.1 PART with a fee rate of 1.1 sat/vB, subtract fee from amount, BIP125-replaceable, using positional arguments
+&gt; particl-cli sendtoaddress &#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc&#34; 0.1 &#34;drinks&#34; &#34;room77&#34; true true null &#34;unset&#34; null 1.1
+
+Send 0.2 PART with a confirmation target of 6 blocks in economical fee estimate mode using named arguments
+&gt; particl-cli -named sendtoaddress address=&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc&#34; amount=0.2 conf_target=6 estimate_mode=&#34;economical&#34;
+
+Send 0.5 PART with a fee rate of 25 sat/vB using named arguments
+&gt; particl-cli -named sendtoaddress address=&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc&#34; amount=0.5 fee_rate=25
+&gt; particl-cli -named sendtoaddress address=&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc&#34; amount=0.5 fee_rate=25 subtractfeefromamount=false replaceable=true avoid_reuse=true comment=&#34;2 pizzas&#34; comment_to=&#34;jeremy&#34; verbose=true
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -175,7 +196,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -188,6 +209,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -286,7 +310,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -645,6 +675,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -778,6 +811,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -847,6 +883,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -856,31 +895,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -911,6 +953,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

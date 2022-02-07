@@ -36,8 +36,8 @@
           
             <pre>fundrawtransaction &#34;hexstring&#34; ( options iswitness )
 
-Add inputs to a transaction until it has enough in value to meet its out value.
-This will not modify existing inputs, and will add at most one change output to the outputs.
+If the transaction has no inputs, they will be automatically selected to meet its out value.
+It will add at most one change output to the outputs.
 No existing outputs will be modified unless &#34;subtractFeeFromOutputs&#34; is specified.
 Note that inputs which were signed may need to be resigned after completion since in/outputs have been added.
 The inputs added will not be signed, use signrawtransactionwithkey
@@ -52,6 +52,7 @@ Arguments:
 1. hexstring                          (string, required) The hex string of the raw transaction
 2. options                            (json object, optional) for backward compatibility: passing in a true instead of an object will result in {&#34;includeWatching&#34;:true}
      {
+       &#34;add_inputs&#34;: bool,            (boolean, optional, default=true) For a transaction with existing inputs, automatically include more if they are not enough.
        &#34;changeAddress&#34;: &#34;str&#34;,        (string, optional, default=pool address) The particl address to receive the change
        &#34;changePosition&#34;: n,           (numeric, optional, default=random) The index of the change output
        &#34;change_type&#34;: &#34;str&#34;,          (string, optional, default=set by -changetype) The output type to use. Only valid if changeAddress is not specified. Options are &#34;legacy&#34;, &#34;p2sh-segwit&#34;, and &#34;bech32&#34;.
@@ -59,8 +60,9 @@ Arguments:
                                       Only solvable inputs can be used. Watch-only destinations are solvable if the public key and/or output script was imported,
                                       e.g. with &#39;importpubkey&#39; or &#39;importmulti&#39; with the &#39;pubkeys&#39; or &#39;desc&#39; field.
        &#34;lockUnspents&#34;: bool,          (boolean, optional, default=false) Lock selected unspent outputs
-       &#34;feeRate&#34;: amount,             (numeric or string, optional, default=not set: makes wallet determine the fee) Set a specific fee rate in PART/kB
-       &#34;subtractFeeFromOutputs&#34;: [    (json array, optional, default=empty array) A json array of integers.
+       &#34;fee_rate&#34;: amount,            (numeric or string, optional, default=not set, fall back to wallet fee estimation) Specify a fee rate in sat/vB.
+       &#34;feeRate&#34;: amount,             (numeric or string, optional, default=not set, fall back to wallet fee estimation) Specify a fee rate in PART/kvB.
+       &#34;subtractFeeFromOutputs&#34;: [    (json array, optional, default=empty array) The integers.
                                       The fee will be equally deducted from the amount of each specified output.
                                       Those recipients will receive less particl than you enter in their corresponding amount field.
                                       If no outputs are specified here, the sender pays the fee.
@@ -69,11 +71,11 @@ Arguments:
        ],
        &#34;replaceable&#34;: bool,           (boolean, optional, default=wallet default) Marks this transaction as BIP125 replaceable.
                                       Allows this transaction to be replaced by a transaction with higher fees
-       &#34;conf_target&#34;: n,              (numeric, optional, default=wallet default) Confirmation target (in blocks)
-       &#34;estimate_mode&#34;: &#34;str&#34;,        (string, optional, default=UNSET) The fee estimate mode, must be one of:
-                                      &#34;UNSET&#34;
-                                      &#34;ECONOMICAL&#34;
-                                      &#34;CONSERVATIVE&#34;
+       &#34;conf_target&#34;: n,              (numeric, optional, default=wallet -txconfirmtarget) Confirmation target in blocks
+       &#34;estimate_mode&#34;: &#34;str&#34;,        (string, optional, default=unset) The fee estimate mode, must be one of (case insensitive):
+                                      &#34;unset&#34;
+                                      &#34;economical&#34;
+                                      &#34;conservative&#34;
      }
 3. iswitness                          (boolean, optional, default=depends on heuristic tests) Whether the transaction hex is a serialized witness transaction.
                                       If iswitness is not present, heuristic tests will be used in decoding.
@@ -83,10 +85,10 @@ Arguments:
                                       (e.g. fully valid, or on-chain transactions), if known by the caller.
 
 Result:
-{
-  &#34;hex&#34;:       &#34;value&#34;, (string)  The resulting raw transaction (hex-encoded string)
-  &#34;fee&#34;:       n,         (numeric) Fee in PART the resulting transaction pays
-  &#34;changepos&#34;: n          (numeric) The position of the added change output, or -1
+{                     (json object)
+  &#34;hex&#34; : &#34;hex&#34;,      (string) The resulting raw transaction (hex-encoded string)
+  &#34;fee&#34; : n,          (numeric) Fee in PART the resulting transaction pays
+  &#34;changepos&#34; : n     (numeric) The position of the added change output, or -1
 }
 
 Examples:
@@ -107,7 +109,7 @@ Send the transaction
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -210,7 +212,7 @@ Send the transaction
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -223,6 +225,9 @@ Send the transaction
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -321,7 +326,13 @@ Send the transaction
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -680,6 +691,9 @@ Send the transaction
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -813,6 +827,9 @@ Send the transaction
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -882,6 +899,9 @@ Send the transaction
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -891,31 +911,34 @@ Send the transaction
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -946,6 +969,9 @@ Send the transaction
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

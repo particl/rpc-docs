@@ -34,22 +34,22 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>walletcreatefundedpsbt - Particl RPC</h1>
           
-            <pre>walletcreatefundedpsbt [{&#34;txid&#34;:&#34;hex&#34;,&#34;vout&#34;:n,&#34;sequence&#34;:n},...] [{&#34;address&#34;:amount},{&#34;data&#34;:&#34;hex&#34;},...] ( locktime options bip32derivs )
+            <pre>walletcreatefundedpsbt ( [{&#34;txid&#34;:&#34;hex&#34;,&#34;vout&#34;:n,&#34;sequence&#34;:n},...] ) [{&#34;address&#34;:amount},{&#34;data&#34;:&#34;hex&#34;},...] ( locktime options bip32derivs )
 
-Creates and funds a transaction in the Partially Signed Transaction format. Inputs will be added if supplied inputs are not enough
+Creates and funds a transaction in the Partially Signed Transaction format.
 Implements the Creator and Updater roles.
 
 Arguments:
-1. inputs                             (json array, required) A json array of json objects
+1. inputs                             (json array, optional) Leave empty to add inputs automatically. See add_inputs option.
      [
        {                              (json object)
          &#34;txid&#34;: &#34;hex&#34;,               (string, required) The transaction id
          &#34;vout&#34;: n,                   (numeric, required) The output number
-         &#34;sequence&#34;: n,               (numeric, required) The sequence number
+         &#34;sequence&#34;: n,               (numeric, optional, default=depends on the value of the &#39;locktime&#39; and &#39;options.replaceable&#39; arguments) The sequence number
        },
        ...
      ]
-2. outputs                            (json array, required) a json array with outputs (key-value pairs), where none of the keys are duplicated.
+2. outputs                            (json array, required) The outputs (key-value pairs), where none of the keys are duplicated.
                                       That is, each address can only appear once and there can only be one &#39;data&#39; object.
                                       For compatibility reasons, a dictionary, which holds the key-value pairs directly, is also
                                       accepted as second parameter.
@@ -65,13 +65,15 @@ Arguments:
 3. locktime                           (numeric, optional, default=0) Raw locktime. Non-0 value also locktime-activates inputs
 4. options                            (json object, optional)
      {
+       &#34;add_inputs&#34;: bool,            (boolean, optional, default=false) If inputs are specified, automatically include more if they are not enough.
        &#34;changeAddress&#34;: &#34;hex&#34;,        (string, optional, default=pool address) The particl address to receive the change
        &#34;changePosition&#34;: n,           (numeric, optional, default=random) The index of the change output
        &#34;change_type&#34;: &#34;str&#34;,          (string, optional, default=set by -changetype) The output type to use. Only valid if changeAddress is not specified. Options are &#34;legacy&#34;, &#34;p2sh-segwit&#34;, and &#34;bech32&#34;.
        &#34;includeWatching&#34;: bool,       (boolean, optional, default=true for watch-only wallets, otherwise false) Also select inputs which are watch only
        &#34;lockUnspents&#34;: bool,          (boolean, optional, default=false) Lock selected unspent outputs
-       &#34;feeRate&#34;: amount,             (numeric or string, optional, default=not set: makes wallet determine the fee) Set a specific fee rate in PART/kB
-       &#34;subtractFeeFromOutputs&#34;: [    (json array, optional, default=empty array) A json array of integers.
+       &#34;fee_rate&#34;: amount,            (numeric or string, optional, default=not set, fall back to wallet fee estimation) Specify a fee rate in sat/vB.
+       &#34;feeRate&#34;: amount,             (numeric or string, optional, default=not set, fall back to wallet fee estimation) Specify a fee rate in PART/kvB.
+       &#34;subtractFeeFromOutputs&#34;: [    (json array, optional, default=empty array) The outputs to subtract the fee from.
                                       The fee will be equally deducted from the amount of each specified output.
                                       Those recipients will receive less particl than you enter in their corresponding amount field.
                                       If no outputs are specified here, the sender pays the fee.
@@ -80,19 +82,19 @@ Arguments:
        ],
        &#34;replaceable&#34;: bool,           (boolean, optional, default=wallet default) Marks this transaction as BIP125 replaceable.
                                       Allows this transaction to be replaced by a transaction with higher fees
-       &#34;conf_target&#34;: n,              (numeric, optional, default=Fallback to wallet&#39;s confirmation target) Confirmation target (in blocks)
-       &#34;estimate_mode&#34;: &#34;str&#34;,        (string, optional, default=UNSET) The fee estimate mode, must be one of:
-                                      &#34;UNSET&#34;
-                                      &#34;ECONOMICAL&#34;
-                                      &#34;CONSERVATIVE&#34;
+       &#34;conf_target&#34;: n,              (numeric, optional, default=wallet -txconfirmtarget) Confirmation target in blocks
+       &#34;estimate_mode&#34;: &#34;str&#34;,        (string, optional, default=unset) The fee estimate mode, must be one of (case insensitive):
+                                      &#34;unset&#34;
+                                      &#34;economical&#34;
+                                      &#34;conservative&#34;
      }
-5. bip32derivs                        (boolean, optional, default=false) If true, includes the BIP 32 derivation paths for public keys if we know them
+5. bip32derivs                        (boolean, optional, default=true) Include BIP 32 derivation paths for public keys if we know them
 
 Result:
-{
-  &#34;psbt&#34;: &#34;value&#34;,        (string)  The resulting raw transaction (base64-encoded string)
-  &#34;fee&#34;:       n,         (numeric) Fee in PART the resulting transaction pays
-  &#34;changepos&#34;: n          (numeric) The position of the added change output, or -1
+{                     (json object)
+  &#34;psbt&#34; : &#34;str&#34;,     (string) The resulting raw transaction (base64-encoded string)
+  &#34;fee&#34; : n,          (numeric) Fee in PART the resulting transaction pays
+  &#34;changepos&#34; : n     (numeric) The position of the added change output, or -1
 }
 
 Examples:
@@ -104,7 +106,7 @@ Create a transaction with no inputs
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -207,7 +209,7 @@ Create a transaction with no inputs
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -220,6 +222,9 @@ Create a transaction with no inputs
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -318,7 +323,13 @@ Create a transaction with no inputs
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -677,6 +688,9 @@ Create a transaction with no inputs
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -810,6 +824,9 @@ Create a transaction with no inputs
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -879,6 +896,9 @@ Create a transaction with no inputs
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -888,31 +908,34 @@ Create a transaction with no inputs
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -943,6 +966,9 @@ Create a transaction with no inputs
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

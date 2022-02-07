@@ -62,24 +62,24 @@ Arguments:
      }
 
 Result:
-[                   (array of json object)
-  {
-    &#34;txid&#34; : &#34;txid&#34;,          (string) the transaction id 
-    &#34;vout&#34; : n,               (numeric) the vout value
-    &#34;address&#34; : &#34;address&#34;,    (string) the particl address
-    &#34;label&#34; : &#34;label&#34;,        (string) The associated label, or &#34;&#34; for the default label
-    &#34;scriptPubKey&#34; : &#34;key&#34;,   (string) the script key
-    &#34;amount&#34; : x.xxx,         (numeric) the transaction output amount in PART
-    &#34;confirmations&#34; : n,      (numeric) The number of confirmations
-    &#34;redeemScript&#34; : n        (string) The redeemScript if scriptPubKey is P2SH
-    &#34;spendable&#34; : xxx,        (bool) Whether we have the private keys to spend this output
-    &#34;solvable&#34; : xxx          (bool) Whether we know how to spend this output, ignoring the lack of keys
-    &#34;desc&#34; : xxx,             (string, only when solvable) A descriptor for spending this output
-    &#34;safe&#34; : xxx              (bool) Whether this output is considered safe to spend. Unconfirmed transactions
-                              from outside keys and unconfirmed replacement transactions are considered unsafe
-                              and are not eligible for spending by fundrawtransaction and sendtoaddress.
-  }
-  ,...
+[                                (json array)
+  {                              (json object)
+    &#34;txid&#34; : &#34;hex&#34;,              (string) the transaction id
+    &#34;vout&#34; : n,                  (numeric) the vout value
+    &#34;address&#34; : &#34;str&#34;,           (string) the particl address
+    &#34;label&#34; : &#34;str&#34;,             (string) The associated label, or &#34;&#34; for the default label
+    &#34;scriptPubKey&#34; : &#34;str&#34;,      (string) the script key
+    &#34;amount&#34; : n,                (numeric) the transaction output amount in PART
+    &#34;confirmations&#34; : n,         (numeric) The number of confirmations
+    &#34;redeemScript&#34; : &#34;hex&#34;,      (string) The redeemScript if scriptPubKey is P2SH
+    &#34;spendable&#34; : true|false,    (boolean) Whether we have the private keys to spend this output
+    &#34;solvable&#34; : true|false,     (boolean) Whether we know how to spend this output, ignoring the lack of keys
+    &#34;reused&#34; : true|false,       (boolean) (only present if avoid_reuse is set) Whether this output is reused/dirty (sent to an address that was previously spent from)
+    &#34;desc&#34; : &#34;str&#34;,              (string) (only when solvable) A descriptor for spending this output
+    &#34;safe&#34; : true|false          (boolean) Whether this output is considered safe to spend. Unconfirmed transactions                              from outside keys and unconfirmed replacement transactions are considered unsafe
+                                 and are not eligible for spending by fundrawtransaction and sendtoaddress.
+  },
+  ...
 ]
 
 Examples:
@@ -87,13 +87,13 @@ Examples:
 &gt; particl-cli listunspentblind 6 9999999 &#34;[\&#34;PfqK97PXYfqRFtdYcZw82x3dzPrZbEAcYa\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;
 
 As a JSON-RPC call
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;listunspentblind&#34;, &#34;params&#34;: [6, 9999999, &#34;[\&#34;PfqK97PXYfqRFtdYcZw82x3dzPrZbEAcYa\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;listunspentblind&#34;, &#34;params&#34;: [6, 9999999, &#34;[\&#34;PfqK97PXYfqRFtdYcZw82x3dzPrZbEAcYa\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -196,7 +196,7 @@ As a JSON-RPC call
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -209,6 +209,9 @@ As a JSON-RPC call
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -307,7 +310,13 @@ As a JSON-RPC call
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -666,6 +675,9 @@ As a JSON-RPC call
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -799,6 +811,9 @@ As a JSON-RPC call
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -868,6 +883,9 @@ As a JSON-RPC call
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -877,31 +895,34 @@ As a JSON-RPC call
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -932,6 +953,9 @@ As a JSON-RPC call
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

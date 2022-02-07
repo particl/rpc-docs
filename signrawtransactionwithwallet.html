@@ -39,10 +39,11 @@
 Sign inputs for raw transaction (serialized, hex-encoded).
 The second optional argument (may be null) is an array of previous transaction outputs that
 this transaction depends on but may not yet be in the block chain.
+Requires wallet passphrase to be set with walletpassphrase call if wallet is encrypted.
 
 Arguments:
 1. hexstring                        (string, required) The transaction hex string
-2. prevtxs                          (json array, optional) A json array of previous dependent transaction outputs
+2. prevtxs                          (json array, optional) The previous dependent transaction outputs
      [
        {                            (json object)
          &#34;txid&#34;: &#34;hex&#34;,             (string, required) The transaction id
@@ -63,30 +64,30 @@ Arguments:
                                     &#34;SINGLE|ANYONECANPAY&#34;
 
 Result:
-{
-  &#34;hex&#34; : &#34;value&#34;,                  (string) The hex-encoded raw transaction with signature(s)
-  &#34;complete&#34; : true|false,          (boolean) If the transaction has a complete set of signatures
-  &#34;errors&#34; : [                      (json array of objects) Script verification errors (if there are any)
-    {
-      &#34;txid&#34; : &#34;hash&#34;,              (string) The hash of the referenced, previous transaction
-      &#34;vout&#34; : n,                   (numeric) The index of the output to spent and used as input
-      &#34;scriptSig&#34; : &#34;hex&#34;,          (string) The hex-encoded signature script
-      &#34;sequence&#34; : n,               (numeric) Script sequence number
-      &#34;error&#34; : &#34;text&#34;              (string) Verification or signing error related to the input
-    }
-    ,...
+{                             (json object)
+  &#34;hex&#34; : &#34;hex&#34;,              (string) The hex-encoded raw transaction with signature(s)
+  &#34;complete&#34; : true|false,    (boolean) If the transaction has a complete set of signatures
+  &#34;errors&#34; : [                (json array, optional) Script verification errors (if there are any)
+    {                         (json object)
+      &#34;txid&#34; : &#34;hex&#34;,         (string) The hash of the referenced, previous transaction
+      &#34;vout&#34; : n,             (numeric) The index of the output to spent and used as input
+      &#34;scriptSig&#34; : &#34;hex&#34;,    (string) The hex-encoded signature script
+      &#34;sequence&#34; : n,         (numeric) Script sequence number
+      &#34;error&#34; : &#34;str&#34;         (string) Verification or signing error related to the input
+    },
+    ...
   ]
 }
 
 Examples:
 &gt; particl-cli signrawtransactionwithwallet &#34;myhex&#34;
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;signrawtransactionwithwallet&#34;, &#34;params&#34;: [&#34;myhex&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;signrawtransactionwithwallet&#34;, &#34;params&#34;: [&#34;myhex&#34;]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -189,7 +190,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -202,6 +203,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -300,7 +304,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -659,6 +669,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -792,6 +805,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -861,6 +877,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -870,31 +889,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -925,6 +947,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

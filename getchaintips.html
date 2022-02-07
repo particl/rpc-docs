@@ -38,36 +38,31 @@
 Return information about all known tips in the block tree, including the main chain as well as orphaned branches.
 
 Result:
-[
-  {
-    &#34;height&#34;: xxxx,         (numeric) height of the chain tip
-    &#34;hash&#34;: &#34;xxxx&#34;,         (string) block hash of the tip
-    &#34;branchlen&#34;: 0          (numeric) zero for main chain
-    &#34;status&#34;: &#34;active&#34;      (string) &#34;active&#34; for the main chain
+[                        (json array)
+  {                      (json object)
+    &#34;height&#34; : n,        (numeric) height of the chain tip
+    &#34;hash&#34; : &#34;hex&#34;,      (string) block hash of the tip
+    &#34;branchlen&#34; : n,     (numeric) zero for main chain, otherwise length of branch connecting the tip to the main chain
+    &#34;status&#34; : &#34;str&#34;     (string) status of the chain, &#34;active&#34; for the main chain
+                         Possible values for status:
+                         1.  &#34;invalid&#34;               This branch contains at least one invalid block
+                         2.  &#34;headers-only&#34;          Not all blocks for this branch are available, but the headers are valid
+                         3.  &#34;valid-headers&#34;         All blocks are available for this branch, but they were never fully validated
+                         4.  &#34;valid-fork&#34;            This branch is not part of the active chain, but is fully validated
+                         5.  &#34;active&#34;                This is the tip of the active main chain, which is certainly valid
   },
-  {
-    &#34;height&#34;: xxxx,
-    &#34;hash&#34;: &#34;xxxx&#34;,
-    &#34;branchlen&#34;: 1          (numeric) length of branch connecting the tip to the main chain
-    &#34;status&#34;: &#34;xxxx&#34;        (string) status of the chain (active, valid-fork, valid-headers, headers-only, invalid)
-  }
+  ...
 ]
-Possible values for status:
-1.  &#34;invalid&#34;               This branch contains at least one invalid block
-2.  &#34;headers-only&#34;          Not all blocks for this branch are available, but the headers are valid
-3.  &#34;valid-headers&#34;         All blocks are available for this branch, but they were never fully validated
-4.  &#34;valid-fork&#34;            This branch is not part of the active chain, but is fully validated
-5.  &#34;active&#34;                This is the tip of the active main chain, which is certainly valid
 
 Examples:
 &gt; particl-cli getchaintips 
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;getchaintips&#34;, &#34;params&#34;: [] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;getchaintips&#34;, &#34;params&#34;: []}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -170,7 +165,7 @@ Examples:
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -183,6 +178,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -281,7 +279,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -640,6 +644,9 @@ Examples:
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -773,6 +780,9 @@ Examples:
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -842,6 +852,9 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -851,31 +864,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -906,6 +922,9 @@ Examples:
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

@@ -34,70 +34,94 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>fundrawtransactionfrom - Particl RPC</h1>
           
-            <pre>fundrawtransactionfrom &#34;input_type&#34; &#34;hexstring&#34; ( {&#34;value&#34;:amount,&#34;blind&#34;:&#34;hex&#34;,&#34;witnessstack&#34;:[&#34;witnesselement&#34;,...]} {&#34;value&#34;:amount,&#34;blind&#34;:&#34;hex&#34;,&#34;witnessstack&#34;:&#34;hex&#34;} options )
+            <pre>fundrawtransactionfrom &#34;input_type&#34; &#34;hexstring&#34; ( {&#34;value&#34;:amount,&#34;blind&#34;:&#34;hex&#34;,&#34;witnessstack&#34;:[&#34;witnesselement&#34;,...],&#34;type&#34;:&#34;str&#34;} {&#34;value&#34;:amount,&#34;blind&#34;:&#34;hex&#34;,&#34;nonce&#34;:&#34;hex&#34;} options )
 
 Add inputs to a transaction until it has enough in value to meet its out value.
 This will not modify existing inputs, and will add at most one change output to the outputs.
 No existing outputs will be modified unless &#34;subtractFeeFromOutputs&#34; is specified.
 Note that inputs which were signed may need to be resigned after completion since in/outputs have been added.
-The inputs added will not be signed, use signrawtransaction for that.
 Note that all existing inputs must have their previous output transaction be in the wallet or have their amount and blinding factor specified in input_amounts.
 
 Arguments:
-1. input_type                          (string, required) The type of inputs to use standard/anon/blind.
-2. hexstring                           (string, required) The hex string of the raw transaction.
-3. input_amounts                       (json object, optional, default=)
+1. input_type                              (string, required) The type of inputs to use standard/anon/blind.
+2. hexstring                               (string, required) The hex string of the raw transaction.
+3. input_amounts                           (json object, optional, default=)
      {
-       &#34;value&#34;: amount,                (numeric or string, required)
-       &#34;blind&#34;: &#34;hex&#34;,                 (string, required)
-       &#34;witnessstack&#34;: [               (json array, optional, default=) A json array of witness elements, used for the fee.
-                                       
-         &#34;witnesselement&#34;,             (string, optional, default=)
+       &#34;value&#34;: amount,                    (numeric or string, required)
+       &#34;blind&#34;: &#34;hex&#34;,                     (string, required)
+       &#34;witnessstack&#34;: [                   (json array, optional, default=) A json array of witness elements, used for the fee.
+                                           
+         &#34;witnesselement&#34;,                 (string, optional, default=)
          ...
        ],
+       &#34;type&#34;: &#34;str&#34;,                      (string, optional, default=standard) Type of input
      }
-4. output_amounts                      (json object, optional, default=)
+4. output_amounts                          (json object, optional, default=)
      {
-       &#34;value&#34;: amount,                (numeric or string, required)
-       &#34;blind&#34;: &#34;hex&#34;,                 (string, required)
-       &#34;witnessstack&#34;: &#34;hex&#34;,          (string, required)
+       &#34;value&#34;: amount,                    (numeric or string, required)
+       &#34;blind&#34;: &#34;hex&#34;,                     (string, required)
+       &#34;nonce&#34;: &#34;hex&#34;,                     (string, optional, default=)
      }
-5. options                             (json object, optional, default=)
+5. options                                 (json object, optional, default=)
      {
-       &#34;changeAddress&#34;: &#34;str&#34;,         (string, optional, default=) The particl address to receive the change.
-       &#34;changepubkey&#34;: &#34;str&#34;,          (string, optional, default=) The public key to use for the change output if changeAddress isn&#39;t set.
-       &#34;changePosition&#34;: n,            (numeric, optional, default=random) The index of the change output.
-       &#34;includeWatching&#34;: bool,        (boolean, optional, default=false) Also select inputs which are watch only.
-       &#34;lockUnspents&#34;: bool,           (boolean, optional, default=false) Lock selected unspent outputs.
-       &#34;feeRate&#34;: amount,              (numeric or string, optional, default=not set: makes wallet determine the fee) Set a specific fee rate in PART/kB
-       &#34;subtractFeeFromOutputs&#34;: [     (json array, optional, default=) A json array of integers.
-                                       The fee will be equally deducted from the amount of each specified output.
-                                       The outputs are specified by their zero-based index, before any change output is added.
-                                       Those recipients will receive less particl than you enter in their corresponding amount field.
-                                       If no outputs are specified here, the sender pays the fee.
-         vout_index,                   (numeric, optional, default=)
+       &#34;inputs&#34;: [                         (json array, optional, default=) A json array of json objects, anon inputs must exist in the chain,
+         {                                 (json object, optional, default=)
+           &#34;tx&#34;: &#34;hex&#34;,                    (string, required) txn id
+           &#34;n&#34;: n,                         (numeric, required) txn vout
+           &#34;type&#34;: &#34;str&#34;,                  (string, optional, default=)
+           &#34;blind&#34;: &#34;hex&#34;,                 (string, optional, default=)
+           &#34;commitment&#34;: &#34;hex&#34;,            (string, optional, default=)
+           &#34;value&#34;: amount,                (numeric or string, optional, default=)
+           &#34;privkey&#34;: &#34;hex&#34;,               (string, optional, default=)
+           &#34;pubkey&#34;: &#34;hex&#34;,                (string, optional, default=)
+         },
          ...
        ],
-       &#34;replaceable&#34;: bool,            (boolean, optional, default=) Marks this transaction as BIP125 replaceable.
-                                       Allows this transaction to be replaced by a transaction with higher fees
-       &#34;conf_target&#34;: n,               (numeric, optional, default=) Confirmation target (in blocks)
-       &#34;estimate_mode&#34;: &#34;str&#34;,         (string, optional, default=UNSET) The fee estimate mode, must be one of:
-                                       &#34;UNSET&#34;
-                                       &#34;ECONOMICAL&#34;
-                                       &#34;CONSERVATIVE&#34;
-       &#34;avoid_reuse&#34;: bool,            (boolean, optional, default=true) (only available if avoid_reuse wallet flag is set) Avoid spending from dirty addresses; addresses are considered
-                                       dirty if they have previously been used in a transaction.
-       &#34;allow_other_inputs&#34;: bool,     (boolean, optional, default=true) Allow inputs to be added if any inputs already exist.
-       &#34;allow_change_output&#34;: bool,    (boolean, optional, default=true) Allow change output to be added if needed (only for &#39;blind&#39; input_type).
-                                       Allows this transaction to be replaced by a transaction with higher fees.
+       &#34;changeAddress&#34;: &#34;str&#34;,             (string, optional, default=) The particl address to receive the change.
+       &#34;changepubkey&#34;: &#34;str&#34;,              (string, optional, default=) The public key to use for the change output if changeAddress isn&#39;t set.
+       &#34;changePosition&#34;: n,                (numeric, optional, default=random) The index of the change output.
+       &#34;includeWatching&#34;: bool,            (boolean, optional, default=false) Also select inputs which are watch only.
+       &#34;lockUnspents&#34;: bool,               (boolean, optional, default=false) Lock selected unspent outputs.
+       &#34;feeRate&#34;: amount,                  (numeric or string, optional, default=not set: makes wallet determine the fee) Set a specific fee rate in PART/kB
+       &#34;subtractFeeFromOutputs&#34;: [         (json array, optional, default=) A json array of integers.
+                                           The fee will be equally deducted from the amount of each specified output.
+                                           The outputs are specified by their zero-based index, before any change output is added.
+                                           Those recipients will receive less particl than you enter in their corresponding amount field.
+                                           If no outputs are specified here, the sender pays the fee.
+         vout_index,                       (numeric, optional, default=)
+         ...
+       ],
+       &#34;replaceable&#34;: bool,                (boolean, optional, default=) Marks this transaction as BIP125 replaceable.
+                                           Allows this transaction to be replaced by a transaction with higher fees
+       &#34;conf_target&#34;: n,                   (numeric, optional, default=) Confirmation target (in blocks)
+       &#34;estimate_mode&#34;: &#34;str&#34;,             (string, optional, default=UNSET) The fee estimate mode, must be one of:
+                                           &#34;UNSET&#34;
+                                           &#34;ECONOMICAL&#34;
+                                           &#34;CONSERVATIVE&#34;
+       &#34;avoid_reuse&#34;: bool,                (boolean, optional, default=true) (only available if avoid_reuse wallet flag is set) Avoid spending from dirty addresses; addresses are considered
+                                           dirty if they have previously been used in a transaction.
+       &#34;allow_other_inputs&#34;: bool,         (boolean, optional, default=true) Allow inputs to be added if any inputs already exist.
+       &#34;allow_change_output&#34;: bool,        (boolean, optional, default=true) Allow change output to be added if needed (only for &#39;blind&#39; input_type).
+                                           Allows this transaction to be replaced by a transaction with higher fees.
+       &#34;sign_tx&#34;: bool,                    (boolean, optional, default=false) Sign transaction.
+       &#34;anon_ring_size&#34;: n,                (numeric, optional, default=5) Ring size for anon transactions.
+       &#34;anon_inputs_per_sig&#34;: n,           (numeric, optional, default=1) Real inputs per ring signature.
+       &#34;blind_watchonly_visible&#34;: bool,    (boolean, optional, default=false) Reveal amounts of blinded outputs sent to stealth addresses to the scan_secret
+       &#34;minimumAmount&#34;: amount,            (numeric or string, optional, default=0) Minimum value of each UTXO to select in PART
+       &#34;maximumAmount&#34;: amount,            (numeric or string, optional, default=unlimited) Maximum value of each to select UTXO in PART
      }
 
 Result:
-{
-  &#34;hex&#34;:       &#34;value&#34;, (string)  The resulting raw transaction (hex-encoded string)
-  &#34;fee&#34;:       n,       (numeric) Fee in PART the resulting transaction pays
-  &#34;changepos&#34;: n        (numeric) The position of the added change output, or -1
-  &#34;output_amounts&#34;: obj (json) Output values and blinding factors
+{                         (json object)
+  &#34;hex&#34; : &#34;hex&#34;,          (string) The resulting raw transaction
+  &#34;fee&#34; : n,              (numeric) Fee in PART the resulting transaction pays
+  &#34;changepos&#34; : n,        (numeric) The position of the added change output, or -1
+  &#34;output_amounts&#34; : {    (json object) Output values and blinding factors
+    &#34;n&#34; : {               (json object)
+      &#34;value&#34; : n,        (numeric) The amount of the output in PART
+      &#34;blind&#34; : &#34;hex&#34;     (string) Blinding factor
+    }
+  }
 }
 
 Examples:
@@ -118,7 +142,7 @@ Send the transaction
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -221,7 +245,7 @@ Send the transaction
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -234,6 +258,9 @@ Send the transaction
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -332,7 +359,13 @@ Send the transaction
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -691,6 +724,9 @@ Send the transaction
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -824,6 +860,9 @@ Send the transaction
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -893,6 +932,9 @@ Send the transaction
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -902,31 +944,34 @@ Send the transaction
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -957,6 +1002,9 @@ Send the transaction
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>

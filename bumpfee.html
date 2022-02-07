@@ -38,28 +38,27 @@
 
 Bumps the fee of an opt-in-RBF transaction T, replacing it with a new transaction B.
 An opt-in RBF transaction with the given txid must be in the wallet.
-The command will pay the additional fee by reducing change outputs or adding inputs when necessary. It may add a new change output if one does not already exist.
-If `totalFee` (DEPRECATED) is given, adding inputs is not supported, so there must be a single change output that is big enough or it will fail.
+The command will pay the additional fee by reducing change outputs or adding inputs when necessary.
+It may add a new change output if one does not already exist.
 All inputs in the original transaction will be included in the replacement transaction.
 The command will fail if the wallet or mempool contains a transaction that spends one of T&#39;s outputs.
-By default, the new fee will be calculated automatically using estimatesmartfee.
+By default, the new fee will be calculated automatically using the estimatesmartfee RPC.
 The user can specify a confirmation target for estimatesmartfee.
-Alternatively, the user can specify totalFee (DEPRECATED), or fee_rate (PART per kB) for the new transaction .
+Alternatively, the user can specify a fee rate in sat/vB for the new transaction.
 At a minimum, the new fee rate must be high enough to pay an additional new relay fee (incrementalfee
 returned by getnetworkinfo) to enter the node&#39;s mempool.
+* WARNING: before version 0.21, fee_rate was in PART/kvB. As of 0.21, fee_rate is in sat/vB. *
 
 Arguments:
 1. txid                           (string, required) The txid to be bumped
 2. options                        (json object, optional)
      {
-       &#34;confTarget&#34;: n,           (numeric, optional, default=wallet default) Confirmation target (in blocks)
-       &#34;totalFee&#34;: n,             (numeric, optional, default=fallback to &#39;confTarget&#39;) Total fee (NOT feerate) to pay, in satoshis. (DEPRECATED)
-                                  In rare cases, the actual fee paid might be slightly higher than the specified
-                                  totalFee if the tx change output has to be removed because it is too close to
-                                  the dust threshold.
-       &#34;fee_rate&#34;: n,             (numeric, optional, default=fallback to &#39;confTarget&#39;) FeeRate (NOT total fee) to pay, in PART per kB
-                                  Specify a fee rate instead of relying on the built-in fee estimator.
-                                  Must be at least 0.0001 BTC per kB higher than the current transaction fee rate.
+       &#34;conf_target&#34;: n,          (numeric, optional, default=wallet -txconfirmtarget) Confirmation target in blocks
+                                  
+       &#34;fee_rate&#34;: amount,        (numeric or string, optional, default=not set, fall back to wallet fee estimation) 
+                                  Specify a fee rate in sat/vB instead of relying on the built-in fee estimator.
+                                  Must be at least 1.000 sat/vB higher than the current transaction fee rate.
+                                  WARNING: before version 0.21, fee_rate was in PART/kvB. As of 0.21, fee_rate is in sat/vB.
                                   
        &#34;replaceable&#34;: bool,       (boolean, optional, default=true) Whether the new transaction should still be
                                   marked bip-125 replaceable. If true, the sequence numbers in the transaction will
@@ -68,30 +67,35 @@ Arguments:
                                   so the new transaction will not be explicitly bip-125 replaceable (though it may
                                   still be replaceable in practice, for example if it has unconfirmed ancestors which
                                   are replaceable).
-       &#34;estimate_mode&#34;: &#34;str&#34;,    (string, optional, default=UNSET) The fee estimate mode, must be one of:
-                                  &#34;UNSET&#34;
-                                  &#34;ECONOMICAL&#34;
-                                  &#34;CONSERVATIVE&#34;
+                                  
+       &#34;estimate_mode&#34;: &#34;str&#34;,    (string, optional, default=unset) The fee estimate mode, must be one of (case insensitive):
+                                  &#34;unset&#34;
+                                  &#34;economical&#34;
+                                  &#34;conservative&#34;
      }
 
 Result:
-{
-  &#34;txid&#34;:    &#34;value&#34;,  (string)  The id of the new transaction
-  &#34;origfee&#34;:  n,         (numeric) Fee of the replaced transaction
-  &#34;fee&#34;:      n,         (numeric) Fee of the new transaction
-  &#34;errors&#34;:  [ str... ] (json array of strings) Errors encountered during processing (may be empty)
+{                    (json object)
+  &#34;psbt&#34; : &#34;str&#34;,    (string) The base64-encoded unsigned PSBT of the new transaction. Only returned when wallet private keys are disabled. (DEPRECATED)
+  &#34;txid&#34; : &#34;hex&#34;,    (string) The id of the new transaction. Only returned when wallet private keys are enabled.
+  &#34;origfee&#34; : n,     (numeric) The fee of the replaced transaction.
+  &#34;fee&#34; : n,         (numeric) The fee of the new transaction.
+  &#34;errors&#34; : [       (json array) Errors encountered during processing (may be empty).
+    &#34;str&#34;,           (string)
+    ...
+  ]
 }
 
 Examples:
 
-Bump the fee, get the new transaction&#39;s txid
+Bump the fee, get the new transaction&#39;stxid
 &gt; particl-cli bumpfee &lt;txid&gt;
 
 </pre>
             <hr>
           
           <p>
-          Particl version: 0.19.2.19
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -194,7 +198,7 @@ Bump the fee, get the new transaction&#39;s txid
                   <a href="getdifficulty.html">getdifficulty</a>
                   <br>
                 
-                  <a href="getindexinfo.html">getindexinfo</a>
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -207,6 +211,9 @@ Bump the fee, get the new transaction&#39;s txid
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -305,7 +312,13 @@ Bump the fee, get the new transaction&#39;s txid
               </div>
               <div class="card-body">
                 
+                  <a href="generateblock.html">generateblock</a>
+                  <br>
+                
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -664,6 +677,9 @@ Bump the fee, get the new transaction&#39;s txid
                   <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
+                  <a href="getindexinfo.html">getindexinfo</a>
+                  <br>
+                
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
                   <br>
                 
@@ -797,6 +813,9 @@ Bump the fee, get the new transaction&#39;s txid
                   <a href="importaddress.html">importaddress</a>
                   <br>
                 
+                  <a href="importdescriptors.html">importdescriptors</a>
+                  <br>
+                
                   <a href="importmulti.html">importmulti</a>
                   <br>
                 
@@ -866,6 +885,9 @@ Bump the fee, get the new transaction&#39;s txid
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
+                  <br>
+                
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
                   <br>
                 
@@ -875,31 +897,34 @@ Bump the fee, get the new transaction&#39;s txid
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
+                  <br>
+                
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -930,6 +955,9 @@ Bump the fee, get the new transaction&#39;s txid
                   <br>
                 
                   <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
                   <br>
                 
                   <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>
