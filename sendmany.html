@@ -34,63 +34,66 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>sendmany - Particl RPC</h1>
           
-            <pre>sendmany &#34;fromaccount&#34; {&#34;address&#34;:amount,...} ( minconf &#34;comment&#34; [&#34;address&#34;,...] replaceable conf_target &#34;estimate_mode&#34;)
+            <pre>sendmany &#34;&#34; {&#34;address&#34;:amount} ( minconf &#34;comment&#34; [&#34;address&#34;,...] replaceable conf_target &#34;estimate_mode&#34; fee_rate verbose )
 
 Send multiple times. Amounts are double-precision floating point numbers.
+Requires wallet passphrase to be set with walletpassphrase call if wallet is encrypted.
 
 Arguments:
-1. &#34;fromaccount&#34;         (string, required) DEPRECATED. The account to send the funds from. Should be &#34;&#34; for the default account
-2. &#34;amounts&#34;             (string, required) A json object with addresses and amounts
-    {
-      &#34;address&#34;:amount   (numeric or string) The particl address is the key, the numeric amount (can be string) in PART is the value
-      ,...
-    }
-3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.
-4. &#34;comment&#34;             (string, optional) A comment
-5. &#34;subtractfeefrom&#34;     (array, optional) A json array with addresses.
-                           The fee will be equally deducted from the amount of each selected address.
-                           Those recipients will receive less PART than you enter in their corresponding amount field.
-                           If no addresses are specified here, the sender pays the fee.
-    [
-      &#34;address&#34;          (string) Subtract fee from this address
-      ,...
-    ]
-6. replaceable            (boolean, optional) Allow this transaction to be replaced by a transaction with higher fees via BIP 125
-7. conf_target            (numeric, optional) Confirmation target (in blocks)
-8. &#34;estimate_mode&#34;      (string, optional, default=UNSET) The fee estimate mode, must be one of:
-       &#34;UNSET&#34;
-       &#34;ECONOMICAL&#34;
-       &#34;CONSERVATIVE&#34;
+1. dummy                     (string, required) Must be set to &#34;&#34; for backwards compatibility.
+2. amounts                   (json object, required) The addresses and amounts
+     {
+       &#34;address&#34;: amount,    (numeric or string, required) The particl address is the key, the numeric amount (can be string) in PART is the value
+     }
+3. minconf                   (numeric, optional) Ignored dummy value
+4. comment                   (string, optional) A comment
+5. subtractfeefrom           (json array, optional) The addresses.
+                             The fee will be equally deducted from the amount of each selected address.
+                             Those recipients will receive less particl than you enter in their corresponding amount field.
+                             If no addresses are specified here, the sender pays the fee.
+     [
+       &#34;address&#34;,            (string) Subtract fee from this address
+       ...
+     ]
+6. replaceable               (boolean, optional, default=wallet default) Allow this transaction to be replaced by a transaction with higher fees via BIP 125
+7. conf_target               (numeric, optional, default=wallet -txconfirmtarget) Confirmation target in blocks
+8. estimate_mode             (string, optional, default=unset) The fee estimate mode, must be one of (case insensitive):
+                             &#34;unset&#34;
+                             &#34;economical&#34;
+                             &#34;conservative&#34;
+9. fee_rate                  (numeric or string, optional, default=not set, fall back to wallet fee estimation) Specify a fee rate in sat/vB.
+10. verbose                  (boolean, optional, default=false) If true, return extra infomration about the transaction.
 
-Result:
-&#34;txid&#34;                   (string) The transaction id for the send. Only 1 transaction is created regardless of 
-                                    the number of addresses.
+Result (if verbose is not set or set to false):
+&#34;hex&#34;    (string) The transaction id for the send. Only 1 transaction is created regardless of
+         the number of addresses.
+
+Result (if verbose is set to true):
+{                          (json object)
+  &#34;txid&#34; : &#34;hex&#34;,          (string) The transaction id for the send. Only 1 transaction is created regardless of
+                           the number of addresses.
+  &#34;fee reason&#34; : &#34;str&#34;     (string) The transaction fee reason.
+}
 
 Examples:
 
 Send two amounts to two different addresses:
-&gt; particl-cli sendmany &#34;&#34; &#34;{\&#34;PswXnorAgjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;PvhJj4j9s6SsuRsAkPZUfHPCjZRNKLeuqP\&#34;:0.02}&#34;
+&gt; particl-cli sendmany &#34;&#34; &#34;{\&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;:0.02}&#34;
 
-Send two amounts to two different addresses, setting the confirmation and comment:
-&gt; particl-cli sendmany &#34;&#34; &#34;{\&#34;PswXnorAgjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;PvhJj4j9s6SsuRsAkPZUfHPCjZRNKLeuqP\&#34;:0.02}&#34; 6 &#34;testing&#34;
+Send two amounts to two different addresses setting the confirmation and comment:
+&gt; particl-cli sendmany &#34;&#34; &#34;{\&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;:0.02}&#34; 6 &#34;testing&#34;
 
 Send two amounts to two different addresses, subtract fee from amount:
-&gt; particl-cli sendmany &#34;&#34; &#34;{\&#34;PswXnorAgjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;PvhJj4j9s6SsuRsAkPZUfHPCjZRNKLeuqP\&#34;:0.02}&#34; 1 &#34;&#34; &#34;[\&#34;PswXnorAgjpAtaySWkPSmWQe3Fc8LmviVc\&#34;,\&#34;PvhJj4j9s6SsuRsAkPZUfHPCjZRNKLeuqP\&#34;]&#34;
+&gt; particl-cli sendmany &#34;&#34; &#34;{\&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc\&#34;:0.01,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;:0.02}&#34; 1 &#34;&#34; &#34;[\&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;
 
-As a json rpc call
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;sendmany&#34;, &#34;params&#34;: [&#34;&#34;, {&#34;1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XX&#34;:0.01,&#34;1353tsE8YMTA4EuV7dgUXGjNFf9KpVvKHz&#34;:0.02}, 6, &#34;testing&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+As a JSON-RPC call
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;sendmany&#34;, &#34;params&#34;: [&#34;&#34;, {&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc&#34;:0.01,&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc&#34;:0.02}, 6, &#34;testing&#34;]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
-          </p>
-          <p>
-          Particl version: 0.16.0.1 
-          </p>
-          <p>
-          Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -129,6 +132,12 @@ As a json rpc call
                   <a href="anonoutput.html">anonoutput</a>
                   <br>
                 
+                  <a href="checkkeyimage.html">checkkeyimage</a>
+                  <br>
+                
+                  <a href="rollbackrctindex.html">rollbackrctindex</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -145,6 +154,9 @@ As a json rpc call
                   <a href="getblock.html">getblock</a>
                   <br>
                 
+                  <a href="getblockbalances.html">getblockbalances</a>
+                  <br>
+                
                   <a href="getblockchaininfo.html">getblockchaininfo</a>
                   <br>
                 
@@ -154,13 +166,25 @@ As a json rpc call
                   <a href="getblockdeltas.html">getblockdeltas</a>
                   <br>
                 
+                  <a href="getblockfilter.html">getblockfilter</a>
+                  <br>
+                
                   <a href="getblockhash.html">getblockhash</a>
+                  <br>
+                
+                  <a href="getblockhashafter.html">getblockhashafter</a>
                   <br>
                 
                   <a href="getblockhashes.html">getblockhashes</a>
                   <br>
                 
                   <a href="getblockheader.html">getblockheader</a>
+                  <br>
+                
+                  <a href="getblockreward.html">getblockreward</a>
+                  <br>
+                
+                  <a href="getblockstats.html">getblockstats</a>
                   <br>
                 
                   <a href="getchaintips.html">getchaintips</a>
@@ -170,6 +194,9 @@ As a json rpc call
                   <br>
                 
                   <a href="getdifficulty.html">getdifficulty</a>
+                  <br>
+                
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -182,6 +209,9 @@ As a json rpc call
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -208,7 +238,19 @@ As a json rpc call
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="pruneorphanedblocks.html">pruneorphanedblocks</a>
+                  <br>
+                
+                  <a href="rehashblock.html">rehashblock</a>
+                  <br>
+                
+                  <a href="rewindchain.html">rewindchain</a>
+                  <br>
+                
                   <a href="savemempool.html">savemempool</a>
+                  <br>
+                
+                  <a href="scantxoutset.html">scantxoutset</a>
                   <br>
                 
                   <a href="verifychain.html">verifychain</a>
@@ -230,6 +272,9 @@ As a json rpc call
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
+                  <a href="getrpcinfo.html">getrpcinfo</a>
+                  <br>
+                
                   <a href="help.html">help</a>
                   <br>
                 
@@ -248,14 +293,30 @@ As a json rpc call
           
             <div class="card">
               <div class="card-header">
+                Csindex
+              </div>
+              <div class="card-body">
+                
+                  <a href="listcoldstakeunspent.html">listcoldstakeunspent</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
                 Generating
               </div>
               <div class="card-body">
                 
-                  <a href="generate.html">generate</a>
+                  <a href="generateblock.html">generateblock</a>
                   <br>
                 
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -302,6 +363,9 @@ As a json rpc call
                   <a href="submitblock.html">submitblock</a>
                   <br>
                 
+                  <a href="submitheader.html">submitheader</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -346,6 +410,9 @@ As a json rpc call
                   <a href="getnetworkinfo.html">getnetworkinfo</a>
                   <br>
                 
+                  <a href="getnodeaddresses.html">getnodeaddresses</a>
+                  <br>
+                
                   <a href="getpeerinfo.html">getpeerinfo</a>
                   <br>
                 
@@ -371,10 +438,34 @@ As a json rpc call
               </div>
               <div class="card-body">
                 
+                  <a href="analyzepsbt.html">analyzepsbt</a>
+                  <br>
+                
+                  <a href="buildscript.html">buildscript</a>
+                  <br>
+                
+                  <a href="combinepsbt.html">combinepsbt</a>
+                  <br>
+                
                   <a href="combinerawtransaction.html">combinerawtransaction</a>
                   <br>
                 
+                  <a href="converttopsbt.html">converttopsbt</a>
+                  <br>
+                
+                  <a href="createpsbt.html">createpsbt</a>
+                  <br>
+                
+                  <a href="createrawparttransaction.html">createrawparttransaction</a>
+                  <br>
+                
                   <a href="createrawtransaction.html">createrawtransaction</a>
+                  <br>
+                
+                  <a href="createsignaturewithkey.html">createsignaturewithkey</a>
+                  <br>
+                
+                  <a href="decodepsbt.html">decodepsbt</a>
                   <br>
                 
                   <a href="decoderawtransaction.html">decoderawtransaction</a>
@@ -383,16 +474,43 @@ As a json rpc call
                   <a href="decodescript.html">decodescript</a>
                   <br>
                 
+                  <a href="finalizepsbt.html">finalizepsbt</a>
+                  <br>
+                
                   <a href="fundrawtransaction.html">fundrawtransaction</a>
+                  <br>
+                
+                  <a href="fundrawtransactionfrom.html">fundrawtransactionfrom</a>
+                  <br>
+                
+                  <a href="generatematchingblindfactor.html">generatematchingblindfactor</a>
                   <br>
                 
                   <a href="getrawtransaction.html">getrawtransaction</a>
                   <br>
                 
+                  <a href="joinpsbts.html">joinpsbts</a>
+                  <br>
+                
+                  <a href="rewindrangeproof.html">rewindrangeproof</a>
+                  <br>
+                
                   <a href="sendrawtransaction.html">sendrawtransaction</a>
                   <br>
                 
-                  <a href="signrawtransaction.html">signrawtransaction</a>
+                  <a href="signrawtransactionwithkey.html">signrawtransactionwithkey</a>
+                  <br>
+                
+                  <a href="testmempoolaccept.html">testmempoolaccept</a>
+                  <br>
+                
+                  <a href="utxoupdatepsbt.html">utxoupdatepsbt</a>
+                  <br>
+                
+                  <a href="verifycommitment.html">verifycommitment</a>
+                  <br>
+                
+                  <a href="verifyrawtransaction.html">verifyrawtransaction</a>
                   <br>
                 
               </div>
@@ -417,13 +535,34 @@ As a json rpc call
                   <a href="smsgbuckets.html">smsgbuckets</a>
                   <br>
                 
+                  <a href="smsgdebug.html">smsgdebug</a>
+                  <br>
+                
                   <a href="smsgdisable.html">smsgdisable</a>
+                  <br>
+                
+                  <a href="smsgdumpprivkey.html">smsgdumpprivkey</a>
                   <br>
                 
                   <a href="smsgenable.html">smsgenable</a>
                   <br>
                 
+                  <a href="smsgfund.html">smsgfund</a>
+                  <br>
+                
+                  <a href="smsggetdifficulty.html">smsggetdifficulty</a>
+                  <br>
+                
+                  <a href="smsggetfeerate.html">smsggetfeerate</a>
+                  <br>
+                
+                  <a href="smsggetinfo.html">smsggetinfo</a>
+                  <br>
+                
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimport.html">smsgimport</a>
                   <br>
                 
                   <a href="smsgimportprivkey.html">smsgimportprivkey</a>
@@ -441,6 +580,12 @@ As a json rpc call
                   <a href="smsgoutbox.html">smsgoutbox</a>
                   <br>
                 
+                  <a href="smsgpeers.html">smsgpeers</a>
+                  <br>
+                
+                  <a href="smsgpurge.html">smsgpurge</a>
+                  <br>
+                
                   <a href="smsgscanbuckets.html">smsgscanbuckets</a>
                   <br>
                 
@@ -453,7 +598,13 @@ As a json rpc call
                   <a href="smsgsendanon.html">smsgsendanon</a>
                   <br>
                 
+                  <a href="smsgsetwallet.html">smsgsetwallet</a>
+                  <br>
+                
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+                  <a href="smsgzmqpush.html">smsgzmqpush</a>
                   <br>
                 
               </div>
@@ -466,7 +617,13 @@ As a json rpc call
               </div>
               <div class="card-body">
                 
+                  <a href="devicebackup.html">devicebackup</a>
+                  <br>
+                
                   <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="deviceloadmnemonic.html">deviceloadmnemonic</a>
                   <br>
                 
                   <a href="devicesignmessage.html">devicesignmessage</a>
@@ -490,6 +647,12 @@ As a json rpc call
                   <a href="listdevices.html">listdevices</a>
                   <br>
                 
+                  <a href="promptunlockdevice.html">promptunlockdevice</a>
+                  <br>
+                
+                  <a href="unlockdevice.html">unlockdevice</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -503,10 +666,16 @@ As a json rpc call
                   <a href="createmultisig.html">createmultisig</a>
                   <br>
                 
-                  <a href="estimatefee.html">estimatefee</a>
+                  <a href="deriveaddresses.html">deriveaddresses</a>
                   <br>
                 
                   <a href="estimatesmartfee.html">estimatesmartfee</a>
+                  <br>
+                
+                  <a href="getdescriptorinfo.html">getdescriptorinfo</a>
+                  <br>
+                
+                  <a href="getindexinfo.html">getindexinfo</a>
                   <br>
                 
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
@@ -540,9 +709,6 @@ As a json rpc call
                   <a href="backupwallet.html">backupwallet</a>
                   <br>
                 
-                  <a href="buildscript.html">buildscript</a>
-                  <br>
-                
                   <a href="bumpfee.html">bumpfee</a>
                   <br>
                 
@@ -552,7 +718,13 @@ As a json rpc call
                   <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
+                  <a href="createwallet.html">createwallet</a>
+                  <br>
+                
                   <a href="debugwallet.html">debugwallet</a>
+                  <br>
+                
+                  <a href="derivefromstealthaddress.html">derivefromstealthaddress</a>
                   <br>
                 
                   <a href="deriverangekeys.html">deriverangekeys</a>
@@ -585,19 +757,25 @@ As a json rpc call
                   <a href="filtertransactions.html">filtertransactions</a>
                   <br>
                 
-                  <a href="getaccount.html">getaccount</a>
+                  <a href="getaddressesbylabel.html">getaddressesbylabel</a>
                   <br>
                 
-                  <a href="getaccountaddress.html">getaccountaddress</a>
-                  <br>
-                
-                  <a href="getaddressesbyaccount.html">getaddressesbyaccount</a>
+                  <a href="getaddressinfo.html">getaddressinfo</a>
                   <br>
                 
                   <a href="getbalance.html">getbalance</a>
                   <br>
                 
+                  <a href="getbalances.html">getbalances</a>
+                  <br>
+                
                   <a href="getcoldstakinginfo.html">getcoldstakinginfo</a>
+                  <br>
+                
+                  <a href="getkeyimage.html">getkeyimage</a>
+                  <br>
+                
+                  <a href="getlockedbalances.html">getlockedbalances</a>
                   <br>
                 
                   <a href="getnewaddress.html">getnewaddress</a>
@@ -612,10 +790,10 @@ As a json rpc call
                   <a href="getrawchangeaddress.html">getrawchangeaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaccount.html">getreceivedbyaccount</a>
+                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
+                  <a href="getreceivedbylabel.html">getreceivedbylabel</a>
                   <br>
                 
                   <a href="getstakinginfo.html">getstakinginfo</a>
@@ -631,6 +809,9 @@ As a json rpc call
                   <br>
                 
                   <a href="importaddress.html">importaddress</a>
+                  <br>
+                
+                  <a href="importdescriptors.html">importdescriptors</a>
                   <br>
                 
                   <a href="importmulti.html">importmulti</a>
@@ -654,19 +835,19 @@ As a json rpc call
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
-                  <a href="listaccounts.html">listaccounts</a>
+                  <a href="listaddressgroupings.html">listaddressgroupings</a>
                   <br>
                 
-                  <a href="listaddressgroupings.html">listaddressgroupings</a>
+                  <a href="listlabels.html">listlabels</a>
                   <br>
                 
                   <a href="listlockunspent.html">listlockunspent</a>
                   <br>
                 
-                  <a href="listreceivedbyaccount.html">listreceivedbyaccount</a>
+                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
                   <br>
                 
-                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
+                  <a href="listreceivedbylabel.html">listreceivedbylabel</a>
                   <br>
                 
                   <a href="listsinceblock.html">listsinceblock</a>
@@ -687,7 +868,13 @@ As a json rpc call
                   <a href="listunspentblind.html">listunspentblind</a>
                   <br>
                 
+                  <a href="listwalletdir.html">listwalletdir</a>
+                  <br>
+                
                   <a href="listwallets.html">listwallets</a>
+                  <br>
+                
+                  <a href="loadwallet.html">loadwallet</a>
                   <br>
                 
                   <a href="lockunspent.html">lockunspent</a>
@@ -696,7 +883,7 @@ As a json rpc call
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
-                  <a href="move.html">move</a>
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
@@ -708,37 +895,34 @@ As a json rpc call
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="rewindchain.html">rewindchain</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="scanchain.html">scanchain</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
-                  <br>
-                
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -747,13 +931,34 @@ As a json rpc call
                   <a href="sendtypeto.html">sendtypeto</a>
                   <br>
                 
-                  <a href="setaccount.html">setaccount</a>
+                  <a href="sethdseed.html">sethdseed</a>
+                  <br>
+                
+                  <a href="setlabel.html">setlabel</a>
                   <br>
                 
                   <a href="settxfee.html">settxfee</a>
                   <br>
                 
+                  <a href="setwalletflag.html">setwalletflag</a>
+                  <br>
+                
                   <a href="signmessage.html">signmessage</a>
+                  <br>
+                
+                  <a href="signrawtransactionwithwallet.html">signrawtransactionwithwallet</a>
+                  <br>
+                
+                  <a href="transactionblinds.html">transactionblinds</a>
+                  <br>
+                
+                  <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
+                  <br>
+                
+                  <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>
                   <br>
                 
                   <a href="walletlock.html">walletlock</a>
@@ -763,6 +968,9 @@ As a json rpc call
                   <br>
                 
                   <a href="walletpassphrasechange.html">walletpassphrasechange</a>
+                  <br>
+                
+                  <a href="walletprocesspsbt.html">walletprocesspsbt</a>
                   <br>
                 
                   <a href="walletsettings.html">walletsettings</a>
@@ -781,12 +989,15 @@ As a json rpc call
                   <a href="getnewzmqserverkeypair.html">getnewzmqserverkeypair</a>
                   <br>
                 
+                  <a href="getzmqnotifications.html">getzmqnotifications</a>
+                  <br>
+                
               </div>
             </div>
             <br>
           
-        </div>  
+        </div>
       </div>
     </main> 
   </body>
-</html>		
+</html>

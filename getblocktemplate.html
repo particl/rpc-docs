@@ -34,7 +34,7 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>getblocktemplate - Particl RPC</h1>
           
-            <pre>getblocktemplate ( TemplateRequest )
+            <pre>getblocktemplate ( &#34;template_request&#34; )
 
 If the request parameters include a &#39;mode&#39; key, that is used to explicitly select between the default &#39;template&#39; request or a &#39;proposal&#39;.
 It returns data needed to construct a block to work on.
@@ -45,81 +45,79 @@ For full specification, see BIPs 22, 23, 9, and 145:
     https://github.com/bitcoin/bips/blob/master/bip-0145.mediawiki
 
 Arguments:
-1. template_request         (json object, optional) A json object in the following spec
+1. template_request         (json object, optional, default={}) Format of the template
      {
-       &#34;mode&#34;:&#34;template&#34;    (string, optional) This must be set to &#34;template&#34;, &#34;proposal&#34; (see BIP 23), or omitted
-       &#34;capabilities&#34;:[     (array, optional) A list of strings
-           &#34;support&#34;          (string) client side supported feature, &#39;longpoll&#39;, &#39;coinbasetxn&#39;, &#39;coinbasevalue&#39;, &#39;proposal&#39;, &#39;serverlist&#39;, &#39;workid&#39;
-           ,...
+       &#34;mode&#34;: &#34;str&#34;,       (string, optional) This must be set to &#34;template&#34;, &#34;proposal&#34; (see BIP 23), or omitted
+       &#34;capabilities&#34;: [    (json array, optional) A list of strings
+         &#34;str&#34;,             (string) client side supported feature, &#39;longpoll&#39;, &#39;coinbasevalue&#39;, &#39;proposal&#39;, &#39;serverlist&#39;, &#39;workid&#39;
+         ...
        ],
-       &#34;rules&#34;:[            (array, optional) A list of strings
-           &#34;support&#34;          (string) client side supported softfork deployment
-           ,...
-       ]
+       &#34;rules&#34;: [           (json array, required) A list of strings
+         &#34;segwit&#34;,          (string, required) (literal) indicates client side segwit support
+         &#34;str&#34;,             (string) other client side supported softfork deployment
+         ...
+       ],
      }
 
-
 Result:
-{
-  &#34;version&#34; : n,                    (numeric) The preferred block version
-  &#34;rules&#34; : [ &#34;rulename&#34;, ... ],    (array of strings) specific block rules that are to be enforced
-  &#34;vbavailable&#34; : {                 (json object) set of pending, supported versionbit (BIP 9) softfork deployments
-      &#34;rulename&#34; : bitnumber          (numeric) identifies the bit number as indicating acceptance and readiness for the named softfork rule
-      ,...
-  },
-  &#34;vbrequired&#34; : n,                 (numeric) bit mask of versionbits the server requires set in submissions
-  &#34;previousblockhash&#34; : &#34;xxxx&#34;,     (string) The hash of current highest block
-  &#34;transactions&#34; : [                (array) contents of non-coinbase transactions that should be included in the next block
-      {
-         &#34;data&#34; : &#34;xxxx&#34;,             (string) transaction data encoded in hexadecimal (byte-for-byte)
-         &#34;txid&#34; : &#34;xxxx&#34;,             (string) transaction id encoded in little-endian hexadecimal
-         &#34;hash&#34; : &#34;xxxx&#34;,             (string) hash encoded in little-endian hexadecimal (including witness data)
-         &#34;depends&#34; : [                (array) array of numbers 
-             n                          (numeric) transactions before this one (by 1-based index in &#39;transactions&#39; list) that must be present in the final block if this one is
-             ,...
-         ],
-         &#34;fee&#34;: n,                    (numeric) difference in value between transaction inputs and outputs (in satoshis); for coinbase transactions, this is a negative Number of the total collected block fees (ie, not including the block subsidy); if key is not present, fee is unknown and clients MUST NOT assume there isn&#39;t one
-         &#34;sigops&#34; : n,                (numeric) total SigOps cost, as counted for purposes of block limits; if key is not present, sigop cost is unknown and clients MUST NOT assume it is zero
-         &#34;weight&#34; : n,                (numeric) total transaction weight, as counted for purposes of block limits
-         &#34;required&#34; : true|false      (boolean) if provided and true, this transaction must be in the final block
-      }
-      ,...
+{                                          (json object)
+  &#34;version&#34; : n,                           (numeric) The preferred block version
+  &#34;rules&#34; : [                              (json array) specific block rules that are to be enforced
+    &#34;str&#34;,                                 (string) name of a rule the client must understand to some extent; see BIP 9 for format
+    ...
   ],
-  &#34;coinbaseaux&#34; : {                 (json object) data that should be included in the coinbase&#39;s scriptSig content
-      &#34;flags&#34; : &#34;xx&#34;                  (string) key name is to be ignored, and value included in scriptSig
+  &#34;vbavailable&#34; : {                        (json object) set of pending, supported versionbit (BIP 9) softfork deployments
+    &#34;rulename&#34; : n,                        (numeric) identifies the bit number as indicating acceptance and readiness for the named softfork rule
+    ...
   },
-  &#34;coinbasevalue&#34; : n,              (numeric) maximum allowable input to coinbase transaction, including the generation award and transaction fees (in satoshis)
-  &#34;coinbasetxn&#34; : { ... },          (json object) information for coinbase transaction
-  &#34;target&#34; : &#34;xxxx&#34;,                (string) The hash target
-  &#34;mintime&#34; : xxx,                  (numeric) The minimum timestamp appropriate for next block time in seconds since epoch (Jan 1 1970 GMT)
-  &#34;mutable&#34; : [                     (array of string) list of ways the block template may be changed 
-     &#34;value&#34;                          (string) A way the block template may be changed, e.g. &#39;time&#39;, &#39;transactions&#39;, &#39;prevblock&#39;
-     ,...
+  &#34;vbrequired&#34; : n,                        (numeric) bit mask of versionbits the server requires set in submissions
+  &#34;previousblockhash&#34; : &#34;str&#34;,             (string) The hash of current highest block
+  &#34;transactions&#34; : [                       (json array) contents of non-coinbase transactions that should be included in the next block
+    {                                      (json object)
+      &#34;data&#34; : &#34;hex&#34;,                      (string) transaction data encoded in hexadecimal (byte-for-byte)
+      &#34;txid&#34; : &#34;hex&#34;,                      (string) transaction id encoded in little-endian hexadecimal
+      &#34;hash&#34; : &#34;hex&#34;,                      (string) hash encoded in little-endian hexadecimal (including witness data)
+      &#34;depends&#34; : [                        (json array) array of numbers
+        n,                                 (numeric) transactions before this one (by 1-based index in &#39;transactions&#39; list) that must be present in the final block if this one is
+        ...
+      ],
+      &#34;fee&#34; : n,                           (numeric) difference in value between transaction inputs and outputs (in satoshis); for coinbase transactions, this is a negative Number of the total collected block fees (ie, not including the block subsidy); if key is not present, fee is unknown and clients MUST NOT assume there isn&#39;t one
+      &#34;sigops&#34; : n,                        (numeric) total SigOps cost, as counted for purposes of block limits; if key is not present, sigop cost is unknown and clients MUST NOT assume it is zero
+      &#34;weight&#34; : n                         (numeric) total transaction weight, as counted for purposes of block limits
+    },
+    ...
   ],
-  &#34;noncerange&#34; : &#34;00000000ffffffff&#34;,(string) A range of valid nonces
-  &#34;sigoplimit&#34; : n,                 (numeric) limit of sigops in blocks
-  &#34;sizelimit&#34; : n,                  (numeric) limit of block size
-  &#34;weightlimit&#34; : n,                (numeric) limit of block weight
-  &#34;curtime&#34; : ttt,                  (numeric) current timestamp in seconds since epoch (Jan 1 1970 GMT)
-  &#34;bits&#34; : &#34;xxxxxxxx&#34;,              (string) compressed target of next block
-  &#34;height&#34; : n                      (numeric) The height of the next block
+  &#34;coinbaseaux&#34; : {                        (json object) data that should be included in the coinbase&#39;s scriptSig content
+    &#34;key&#34; : &#34;hex&#34;,                         (string) values must be in the coinbase (keys may be ignored)
+    ...
+  },
+  &#34;coinbasevalue&#34; : n,                     (numeric) maximum allowable input to coinbase transaction, including the generation award and transaction fees (in satoshis)
+  &#34;longpollid&#34; : &#34;str&#34;,                    (string) an id to include with a request to longpoll on an update to this template
+  &#34;target&#34; : &#34;str&#34;,                        (string) The hash target
+  &#34;mintime&#34; : xxx,                         (numeric) The minimum timestamp appropriate for the next block time, expressed in UNIX epoch time
+  &#34;mutable&#34; : [                            (json array) list of ways the block template may be changed
+    &#34;str&#34;,                                 (string) A way the block template may be changed, e.g. &#39;time&#39;, &#39;transactions&#39;, &#39;prevblock&#39;
+    ...
+  ],
+  &#34;noncerange&#34; : &#34;hex&#34;,                    (string) A range of valid nonces
+  &#34;sigoplimit&#34; : n,                        (numeric) limit of sigops in blocks
+  &#34;sizelimit&#34; : n,                         (numeric) limit of block size
+  &#34;weightlimit&#34; : n,                       (numeric) limit of block weight
+  &#34;curtime&#34; : xxx,                         (numeric) current timestamp in UNIX epoch time
+  &#34;bits&#34; : &#34;str&#34;,                          (string) compressed target of next block
+  &#34;height&#34; : n,                            (numeric) The height of the next block
+  &#34;default_witness_commitment&#34; : &#34;str&#34;     (string, optional) a valid witness commitment for the unmodified block template
 }
 
 Examples:
-&gt; particl-cli getblocktemplate 
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;getblocktemplate&#34;, &#34;params&#34;: [] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+&gt; particl-cli getblocktemplate &#39;{&#34;rules&#34;: [&#34;segwit&#34;]}&#39;
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;getblocktemplate&#34;, &#34;params&#34;: [{&#34;rules&#34;: [&#34;segwit&#34;]}]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
-          </p>
-          <p>
-          Particl version: 0.16.0.1 
-          </p>
-          <p>
-          Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -158,6 +156,12 @@ Examples:
                   <a href="anonoutput.html">anonoutput</a>
                   <br>
                 
+                  <a href="checkkeyimage.html">checkkeyimage</a>
+                  <br>
+                
+                  <a href="rollbackrctindex.html">rollbackrctindex</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -174,6 +178,9 @@ Examples:
                   <a href="getblock.html">getblock</a>
                   <br>
                 
+                  <a href="getblockbalances.html">getblockbalances</a>
+                  <br>
+                
                   <a href="getblockchaininfo.html">getblockchaininfo</a>
                   <br>
                 
@@ -183,13 +190,25 @@ Examples:
                   <a href="getblockdeltas.html">getblockdeltas</a>
                   <br>
                 
+                  <a href="getblockfilter.html">getblockfilter</a>
+                  <br>
+                
                   <a href="getblockhash.html">getblockhash</a>
+                  <br>
+                
+                  <a href="getblockhashafter.html">getblockhashafter</a>
                   <br>
                 
                   <a href="getblockhashes.html">getblockhashes</a>
                   <br>
                 
                   <a href="getblockheader.html">getblockheader</a>
+                  <br>
+                
+                  <a href="getblockreward.html">getblockreward</a>
+                  <br>
+                
+                  <a href="getblockstats.html">getblockstats</a>
                   <br>
                 
                   <a href="getchaintips.html">getchaintips</a>
@@ -199,6 +218,9 @@ Examples:
                   <br>
                 
                   <a href="getdifficulty.html">getdifficulty</a>
+                  <br>
+                
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -211,6 +233,9 @@ Examples:
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -237,7 +262,19 @@ Examples:
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="pruneorphanedblocks.html">pruneorphanedblocks</a>
+                  <br>
+                
+                  <a href="rehashblock.html">rehashblock</a>
+                  <br>
+                
+                  <a href="rewindchain.html">rewindchain</a>
+                  <br>
+                
                   <a href="savemempool.html">savemempool</a>
+                  <br>
+                
+                  <a href="scantxoutset.html">scantxoutset</a>
                   <br>
                 
                   <a href="verifychain.html">verifychain</a>
@@ -259,6 +296,9 @@ Examples:
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
+                  <a href="getrpcinfo.html">getrpcinfo</a>
+                  <br>
+                
                   <a href="help.html">help</a>
                   <br>
                 
@@ -277,14 +317,30 @@ Examples:
           
             <div class="card">
               <div class="card-header">
+                Csindex
+              </div>
+              <div class="card-body">
+                
+                  <a href="listcoldstakeunspent.html">listcoldstakeunspent</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
                 Generating
               </div>
               <div class="card-body">
                 
-                  <a href="generate.html">generate</a>
+                  <a href="generateblock.html">generateblock</a>
                   <br>
                 
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -331,6 +387,9 @@ Examples:
                   <a href="submitblock.html">submitblock</a>
                   <br>
                 
+                  <a href="submitheader.html">submitheader</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -375,6 +434,9 @@ Examples:
                   <a href="getnetworkinfo.html">getnetworkinfo</a>
                   <br>
                 
+                  <a href="getnodeaddresses.html">getnodeaddresses</a>
+                  <br>
+                
                   <a href="getpeerinfo.html">getpeerinfo</a>
                   <br>
                 
@@ -400,10 +462,34 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="analyzepsbt.html">analyzepsbt</a>
+                  <br>
+                
+                  <a href="buildscript.html">buildscript</a>
+                  <br>
+                
+                  <a href="combinepsbt.html">combinepsbt</a>
+                  <br>
+                
                   <a href="combinerawtransaction.html">combinerawtransaction</a>
                   <br>
                 
+                  <a href="converttopsbt.html">converttopsbt</a>
+                  <br>
+                
+                  <a href="createpsbt.html">createpsbt</a>
+                  <br>
+                
+                  <a href="createrawparttransaction.html">createrawparttransaction</a>
+                  <br>
+                
                   <a href="createrawtransaction.html">createrawtransaction</a>
+                  <br>
+                
+                  <a href="createsignaturewithkey.html">createsignaturewithkey</a>
+                  <br>
+                
+                  <a href="decodepsbt.html">decodepsbt</a>
                   <br>
                 
                   <a href="decoderawtransaction.html">decoderawtransaction</a>
@@ -412,16 +498,43 @@ Examples:
                   <a href="decodescript.html">decodescript</a>
                   <br>
                 
+                  <a href="finalizepsbt.html">finalizepsbt</a>
+                  <br>
+                
                   <a href="fundrawtransaction.html">fundrawtransaction</a>
+                  <br>
+                
+                  <a href="fundrawtransactionfrom.html">fundrawtransactionfrom</a>
+                  <br>
+                
+                  <a href="generatematchingblindfactor.html">generatematchingblindfactor</a>
                   <br>
                 
                   <a href="getrawtransaction.html">getrawtransaction</a>
                   <br>
                 
+                  <a href="joinpsbts.html">joinpsbts</a>
+                  <br>
+                
+                  <a href="rewindrangeproof.html">rewindrangeproof</a>
+                  <br>
+                
                   <a href="sendrawtransaction.html">sendrawtransaction</a>
                   <br>
                 
-                  <a href="signrawtransaction.html">signrawtransaction</a>
+                  <a href="signrawtransactionwithkey.html">signrawtransactionwithkey</a>
+                  <br>
+                
+                  <a href="testmempoolaccept.html">testmempoolaccept</a>
+                  <br>
+                
+                  <a href="utxoupdatepsbt.html">utxoupdatepsbt</a>
+                  <br>
+                
+                  <a href="verifycommitment.html">verifycommitment</a>
+                  <br>
+                
+                  <a href="verifyrawtransaction.html">verifyrawtransaction</a>
                   <br>
                 
               </div>
@@ -446,13 +559,34 @@ Examples:
                   <a href="smsgbuckets.html">smsgbuckets</a>
                   <br>
                 
+                  <a href="smsgdebug.html">smsgdebug</a>
+                  <br>
+                
                   <a href="smsgdisable.html">smsgdisable</a>
+                  <br>
+                
+                  <a href="smsgdumpprivkey.html">smsgdumpprivkey</a>
                   <br>
                 
                   <a href="smsgenable.html">smsgenable</a>
                   <br>
                 
+                  <a href="smsgfund.html">smsgfund</a>
+                  <br>
+                
+                  <a href="smsggetdifficulty.html">smsggetdifficulty</a>
+                  <br>
+                
+                  <a href="smsggetfeerate.html">smsggetfeerate</a>
+                  <br>
+                
+                  <a href="smsggetinfo.html">smsggetinfo</a>
+                  <br>
+                
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimport.html">smsgimport</a>
                   <br>
                 
                   <a href="smsgimportprivkey.html">smsgimportprivkey</a>
@@ -470,6 +604,12 @@ Examples:
                   <a href="smsgoutbox.html">smsgoutbox</a>
                   <br>
                 
+                  <a href="smsgpeers.html">smsgpeers</a>
+                  <br>
+                
+                  <a href="smsgpurge.html">smsgpurge</a>
+                  <br>
+                
                   <a href="smsgscanbuckets.html">smsgscanbuckets</a>
                   <br>
                 
@@ -482,7 +622,13 @@ Examples:
                   <a href="smsgsendanon.html">smsgsendanon</a>
                   <br>
                 
+                  <a href="smsgsetwallet.html">smsgsetwallet</a>
+                  <br>
+                
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+                  <a href="smsgzmqpush.html">smsgzmqpush</a>
                   <br>
                 
               </div>
@@ -495,7 +641,13 @@ Examples:
               </div>
               <div class="card-body">
                 
+                  <a href="devicebackup.html">devicebackup</a>
+                  <br>
+                
                   <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="deviceloadmnemonic.html">deviceloadmnemonic</a>
                   <br>
                 
                   <a href="devicesignmessage.html">devicesignmessage</a>
@@ -519,6 +671,12 @@ Examples:
                   <a href="listdevices.html">listdevices</a>
                   <br>
                 
+                  <a href="promptunlockdevice.html">promptunlockdevice</a>
+                  <br>
+                
+                  <a href="unlockdevice.html">unlockdevice</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -532,10 +690,16 @@ Examples:
                   <a href="createmultisig.html">createmultisig</a>
                   <br>
                 
-                  <a href="estimatefee.html">estimatefee</a>
+                  <a href="deriveaddresses.html">deriveaddresses</a>
                   <br>
                 
                   <a href="estimatesmartfee.html">estimatesmartfee</a>
+                  <br>
+                
+                  <a href="getdescriptorinfo.html">getdescriptorinfo</a>
+                  <br>
+                
+                  <a href="getindexinfo.html">getindexinfo</a>
                   <br>
                 
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
@@ -569,9 +733,6 @@ Examples:
                   <a href="backupwallet.html">backupwallet</a>
                   <br>
                 
-                  <a href="buildscript.html">buildscript</a>
-                  <br>
-                
                   <a href="bumpfee.html">bumpfee</a>
                   <br>
                 
@@ -581,7 +742,13 @@ Examples:
                   <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
+                  <a href="createwallet.html">createwallet</a>
+                  <br>
+                
                   <a href="debugwallet.html">debugwallet</a>
+                  <br>
+                
+                  <a href="derivefromstealthaddress.html">derivefromstealthaddress</a>
                   <br>
                 
                   <a href="deriverangekeys.html">deriverangekeys</a>
@@ -614,19 +781,25 @@ Examples:
                   <a href="filtertransactions.html">filtertransactions</a>
                   <br>
                 
-                  <a href="getaccount.html">getaccount</a>
+                  <a href="getaddressesbylabel.html">getaddressesbylabel</a>
                   <br>
                 
-                  <a href="getaccountaddress.html">getaccountaddress</a>
-                  <br>
-                
-                  <a href="getaddressesbyaccount.html">getaddressesbyaccount</a>
+                  <a href="getaddressinfo.html">getaddressinfo</a>
                   <br>
                 
                   <a href="getbalance.html">getbalance</a>
                   <br>
                 
+                  <a href="getbalances.html">getbalances</a>
+                  <br>
+                
                   <a href="getcoldstakinginfo.html">getcoldstakinginfo</a>
+                  <br>
+                
+                  <a href="getkeyimage.html">getkeyimage</a>
+                  <br>
+                
+                  <a href="getlockedbalances.html">getlockedbalances</a>
                   <br>
                 
                   <a href="getnewaddress.html">getnewaddress</a>
@@ -641,10 +814,10 @@ Examples:
                   <a href="getrawchangeaddress.html">getrawchangeaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaccount.html">getreceivedbyaccount</a>
+                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
+                  <a href="getreceivedbylabel.html">getreceivedbylabel</a>
                   <br>
                 
                   <a href="getstakinginfo.html">getstakinginfo</a>
@@ -660,6 +833,9 @@ Examples:
                   <br>
                 
                   <a href="importaddress.html">importaddress</a>
+                  <br>
+                
+                  <a href="importdescriptors.html">importdescriptors</a>
                   <br>
                 
                   <a href="importmulti.html">importmulti</a>
@@ -683,19 +859,19 @@ Examples:
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
-                  <a href="listaccounts.html">listaccounts</a>
+                  <a href="listaddressgroupings.html">listaddressgroupings</a>
                   <br>
                 
-                  <a href="listaddressgroupings.html">listaddressgroupings</a>
+                  <a href="listlabels.html">listlabels</a>
                   <br>
                 
                   <a href="listlockunspent.html">listlockunspent</a>
                   <br>
                 
-                  <a href="listreceivedbyaccount.html">listreceivedbyaccount</a>
+                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
                   <br>
                 
-                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
+                  <a href="listreceivedbylabel.html">listreceivedbylabel</a>
                   <br>
                 
                   <a href="listsinceblock.html">listsinceblock</a>
@@ -716,7 +892,13 @@ Examples:
                   <a href="listunspentblind.html">listunspentblind</a>
                   <br>
                 
+                  <a href="listwalletdir.html">listwalletdir</a>
+                  <br>
+                
                   <a href="listwallets.html">listwallets</a>
+                  <br>
+                
+                  <a href="loadwallet.html">loadwallet</a>
                   <br>
                 
                   <a href="lockunspent.html">lockunspent</a>
@@ -725,7 +907,7 @@ Examples:
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
-                  <a href="move.html">move</a>
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
@@ -737,37 +919,34 @@ Examples:
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="rewindchain.html">rewindchain</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="scanchain.html">scanchain</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
-                  <br>
-                
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -776,13 +955,34 @@ Examples:
                   <a href="sendtypeto.html">sendtypeto</a>
                   <br>
                 
-                  <a href="setaccount.html">setaccount</a>
+                  <a href="sethdseed.html">sethdseed</a>
+                  <br>
+                
+                  <a href="setlabel.html">setlabel</a>
                   <br>
                 
                   <a href="settxfee.html">settxfee</a>
                   <br>
                 
+                  <a href="setwalletflag.html">setwalletflag</a>
+                  <br>
+                
                   <a href="signmessage.html">signmessage</a>
+                  <br>
+                
+                  <a href="signrawtransactionwithwallet.html">signrawtransactionwithwallet</a>
+                  <br>
+                
+                  <a href="transactionblinds.html">transactionblinds</a>
+                  <br>
+                
+                  <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
+                  <br>
+                
+                  <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>
                   <br>
                 
                   <a href="walletlock.html">walletlock</a>
@@ -792,6 +992,9 @@ Examples:
                   <br>
                 
                   <a href="walletpassphrasechange.html">walletpassphrasechange</a>
+                  <br>
+                
+                  <a href="walletprocesspsbt.html">walletprocesspsbt</a>
                   <br>
                 
                   <a href="walletsettings.html">walletsettings</a>
@@ -810,12 +1013,15 @@ Examples:
                   <a href="getnewzmqserverkeypair.html">getnewzmqserverkeypair</a>
                   <br>
                 
+                  <a href="getzmqnotifications.html">getzmqnotifications</a>
+                  <br>
+                
               </div>
             </div>
             <br>
           
-        </div>  
+        </div>
       </div>
     </main> 
   </body>
-</html>		
+</html>

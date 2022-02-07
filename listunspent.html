@@ -34,73 +34,71 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>listunspent - Particl RPC</h1>
           
-            <pre>listunspent ( minconf maxconf  [&#34;addresses&#34;,...] [include_unsafe] [query_options])
+            <pre>listunspent ( minconf maxconf [&#34;address&#34;,...] include_unsafe query_options )
 
 Returns array of unspent transaction outputs
 with between minconf and maxconf (inclusive) confirmations.
 Optionally filter to only include txouts paid to specified addresses.
 
 Arguments:
-1. minconf          (numeric, optional, default=1) The minimum confirmations to filter
-2. maxconf          (numeric, optional, default=9999999) The maximum confirmations to filter
-3. &#34;addresses&#34;      (string) A json array of particl addresses to filter
-    [
-      &#34;address&#34;     (string) particl address
-      ,...
-    ]
-4. include_unsafe (bool, optional, default=true) Include outputs that are not safe to spend
-                  See description of &#34;safe&#34; attribute below.
-5. query_options    (json, optional) JSON with query options
-    {
-      &#34;minimumAmount&#34;    (numeric or string, default=0) Minimum value of each UTXO in PART
-      &#34;maximumAmount&#34;    (numeric or string, default=unlimited) Maximum value of each UTXO in PART
-      &#34;maximumCount&#34;     (numeric or string, default=unlimited) Maximum number of UTXOs
-      &#34;minimumSumAmount&#34; (numeric or string, default=unlimited) Minimum sum value of all UTXOs in PART
-      &#34;cc_format&#34;        (bool, default=false) Format for coincontrol
-      &#34;include_immature&#34; (bool, default=false) Include immature staked outputs
-    }
+1. minconf                            (numeric, optional, default=1) The minimum confirmations to filter
+2. maxconf                            (numeric, optional, default=9999999) The maximum confirmations to filter
+3. addresses                          (json array, optional, default=empty array) The particl addresses to filter
+     [
+       &#34;address&#34;,                     (string) particl address
+       ...
+     ]
+4. include_unsafe                     (boolean, optional, default=true) Include outputs that are not safe to spend
+                                      See description of &#34;safe&#34; attribute below.
+5. query_options                      (json object, optional) JSON with query options
+     {
+       &#34;minimumAmount&#34;: amount,       (numeric or string, optional, default=0) Minimum value of each UTXO in PART
+       &#34;maximumAmount&#34;: amount,       (numeric or string, optional, default=unlimited) Maximum value of each UTXO in PART
+       &#34;maximumCount&#34;: n,             (numeric, optional, default=unlimited) Maximum number of UTXOs
+       &#34;minimumSumAmount&#34;: amount,    (numeric or string, optional, default=unlimited) Minimum sum value of all UTXOs in PART
+       &#34;cc_format&#34;: bool,             (boolean, optional, default=false) Format output for coincontrol
+       &#34;include_immature&#34;: bool,      (boolean, optional, default=false) Include immature staked outputs
+     }
 
-Result
-[                     (array of json object)
-  {
-    &#34;txid&#34; : &#34;txid&#34;,        (string) the transaction id 
-    &#34;vout&#34; : n,               (numeric) the vout value
-    &#34;address&#34; : &#34;address&#34;,  (string) the particl address
-    &#34;coldstaking_address&#34;  : &#34;address&#34; (string) the particl address this output must stake on
-    &#34;account&#34; : &#34;account&#34;,  (string) DEPRECATED. The associated account, or &#34;&#34; for the default account
-    &#34;scriptPubKey&#34; : &#34;key&#34;, (string) the script key
-    &#34;amount&#34; : x.xxx,         (numeric) the transaction output amount in PART
-    &#34;confirmations&#34; : n,      (numeric) The number of confirmations
-    &#34;redeemScript&#34; : n        (string) The redeemScript if scriptPubKey is P2SH
-    &#34;spendable&#34; : xxx,        (bool) Whether we have the private keys to spend this output
-    &#34;solvable&#34; : xxx,         (bool) Whether we know how to spend this output, ignoring the lack of keys
-    &#34;safe&#34; : xxx              (bool) Whether this output is considered safe to spend. Unconfirmed transactions
-                              from outside keys and unconfirmed replacement transactions are considered unsafe
-                              and are not eligible for spending by fundrawtransaction and sendtoaddress.
-  }
-  ,...
+Result:
+[                                     (json array)
+  {                                   (json object)
+    &#34;txid&#34; : &#34;hex&#34;,                   (string) the transaction id
+    &#34;vout&#34; : n,                       (numeric) the vout value
+    &#34;address&#34; : &#34;str&#34;,                (string) the particl address
+    &#34;coldstaking_address&#34; : &#34;str&#34;,    (string) the particl address this output must stake on
+    &#34;label&#34; : &#34;str&#34;,                  (string) The associated label, or &#34;&#34; for the default label
+    &#34;scriptPubKey&#34; : &#34;str&#34;,           (string) the script key
+    &#34;amount&#34; : n,                     (numeric) the transaction output amount in PART
+    &#34;confirmations&#34; : n,              (numeric) The number of confirmations
+    &#34;redeemScript&#34; : &#34;hex&#34;,           (string) The redeemScript if scriptPubKey is P2SH
+    &#34;witnessScript&#34; : &#34;str&#34;,          (string) witnessScript if the scriptPubKey is P2WSH or P2SH-P2WSH
+    &#34;spendable&#34; : true|false,         (boolean) Whether we have the private keys to spend this output
+    &#34;solvable&#34; : true|false,          (boolean) Whether we know how to spend this output, ignoring the lack of keys
+    &#34;stakeable&#34; : true|false,         (boolean) Whether we have the private keys to stake this output
+    &#34;reused&#34; : true|false,            (boolean) (only present if avoid_reuse is set) Whether this output is reused/dirty (sent to an address that was previously spent from)
+    &#34;desc&#34; : &#34;str&#34;,                   (string) (only when solvable) A descriptor for spending this output
+    &#34;safe&#34; : true|false               (boolean) Whether this output is considered safe to spend. Unconfirmed transactions
+                                      from outside keys and unconfirmed replacement transactions are considered unsafe
+                                      and are not eligible for spending by fundrawtransaction and sendtoaddress.
+  },
+  ...
 ]
 
-Examples
+Examples:
 &gt; particl-cli listunspent 
-&gt; particl-cli listunspent 6 9999999 &#34;[\&#34;PfqK97PXYfqRFtdYcZw82x3dzPrZbEAcYa\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;listunspent&#34;, &#34;params&#34;: [6, 9999999 &#34;[\&#34;PfqK97PXYfqRFtdYcZw82x3dzPrZbEAcYa\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+&gt; particl-cli listunspent 6 9999999 &#34;[\&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;listunspent&#34;, &#34;params&#34;: [6, 9999999 &#34;[\&#34;PswXnoragjpAtaySWkPSmWQe3Fc8LmviVc\&#34;,\&#34;Pka9M2Bva8WetQhQ4ngC255HAbMJf5P5Dc\&#34;]&#34;]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 &gt; particl-cli listunspent 6 9999999 &#39;[]&#39; true &#39;{ &#34;minimumAmount&#34;: 0.005 }&#39;
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;listunspent&#34;, &#34;params&#34;: [6, 9999999, [] , true, { &#34;minimumAmount&#34;: 0.005 } ] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;listunspent&#34;, &#34;params&#34;: [6, 9999999, [] , true, { &#34;minimumAmount&#34;: 0.005 } ]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 &gt; particl-cli listunspent 1 9999999 &#39;[]&#39; false &#39;{&#34;include_immature&#34;:true}&#39;
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;listunspent&#34;, &#34;params&#34;: [1, 9999999, [] , false, {&#34;include_immature&#34;:true} ] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;: &#34;curltest&#34;, &#34;method&#34;: &#34;listunspent&#34;, &#34;params&#34;: [1, 9999999, [] , false, {&#34;include_immature&#34;:true} ]}&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
-          </p>
-          <p>
-          Particl version: 0.16.0.1 
-          </p>
-          <p>
-          Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
+          Particl version: 0.21.2.6
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -139,6 +137,12 @@ Examples
                   <a href="anonoutput.html">anonoutput</a>
                   <br>
                 
+                  <a href="checkkeyimage.html">checkkeyimage</a>
+                  <br>
+                
+                  <a href="rollbackrctindex.html">rollbackrctindex</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -155,6 +159,9 @@ Examples
                   <a href="getblock.html">getblock</a>
                   <br>
                 
+                  <a href="getblockbalances.html">getblockbalances</a>
+                  <br>
+                
                   <a href="getblockchaininfo.html">getblockchaininfo</a>
                   <br>
                 
@@ -164,13 +171,25 @@ Examples
                   <a href="getblockdeltas.html">getblockdeltas</a>
                   <br>
                 
+                  <a href="getblockfilter.html">getblockfilter</a>
+                  <br>
+                
                   <a href="getblockhash.html">getblockhash</a>
+                  <br>
+                
+                  <a href="getblockhashafter.html">getblockhashafter</a>
                   <br>
                 
                   <a href="getblockhashes.html">getblockhashes</a>
                   <br>
                 
                   <a href="getblockheader.html">getblockheader</a>
+                  <br>
+                
+                  <a href="getblockreward.html">getblockreward</a>
+                  <br>
+                
+                  <a href="getblockstats.html">getblockstats</a>
                   <br>
                 
                   <a href="getchaintips.html">getchaintips</a>
@@ -180,6 +199,9 @@ Examples
                   <br>
                 
                   <a href="getdifficulty.html">getdifficulty</a>
+                  <br>
+                
+                  <a href="getinsightinfo.html">getinsightinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -192,6 +214,9 @@ Examples
                   <br>
                 
                   <a href="getmempoolinfo.html">getmempoolinfo</a>
+                  <br>
+                
+                  <a href="getposdifficulty.html">getposdifficulty</a>
                   <br>
                 
                   <a href="getrawmempool.html">getrawmempool</a>
@@ -218,7 +243,19 @@ Examples
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="pruneorphanedblocks.html">pruneorphanedblocks</a>
+                  <br>
+                
+                  <a href="rehashblock.html">rehashblock</a>
+                  <br>
+                
+                  <a href="rewindchain.html">rewindchain</a>
+                  <br>
+                
                   <a href="savemempool.html">savemempool</a>
+                  <br>
+                
+                  <a href="scantxoutset.html">scantxoutset</a>
                   <br>
                 
                   <a href="verifychain.html">verifychain</a>
@@ -240,6 +277,9 @@ Examples
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
+                  <a href="getrpcinfo.html">getrpcinfo</a>
+                  <br>
+                
                   <a href="help.html">help</a>
                   <br>
                 
@@ -258,14 +298,30 @@ Examples
           
             <div class="card">
               <div class="card-header">
+                Csindex
+              </div>
+              <div class="card-body">
+                
+                  <a href="listcoldstakeunspent.html">listcoldstakeunspent</a>
+                  <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
                 Generating
               </div>
               <div class="card-body">
                 
-                  <a href="generate.html">generate</a>
+                  <a href="generateblock.html">generateblock</a>
                   <br>
                 
                   <a href="generatetoaddress.html">generatetoaddress</a>
+                  <br>
+                
+                  <a href="generatetodescriptor.html">generatetodescriptor</a>
                   <br>
                 
               </div>
@@ -312,6 +368,9 @@ Examples
                   <a href="submitblock.html">submitblock</a>
                   <br>
                 
+                  <a href="submitheader.html">submitheader</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -356,6 +415,9 @@ Examples
                   <a href="getnetworkinfo.html">getnetworkinfo</a>
                   <br>
                 
+                  <a href="getnodeaddresses.html">getnodeaddresses</a>
+                  <br>
+                
                   <a href="getpeerinfo.html">getpeerinfo</a>
                   <br>
                 
@@ -381,10 +443,34 @@ Examples
               </div>
               <div class="card-body">
                 
+                  <a href="analyzepsbt.html">analyzepsbt</a>
+                  <br>
+                
+                  <a href="buildscript.html">buildscript</a>
+                  <br>
+                
+                  <a href="combinepsbt.html">combinepsbt</a>
+                  <br>
+                
                   <a href="combinerawtransaction.html">combinerawtransaction</a>
                   <br>
                 
+                  <a href="converttopsbt.html">converttopsbt</a>
+                  <br>
+                
+                  <a href="createpsbt.html">createpsbt</a>
+                  <br>
+                
+                  <a href="createrawparttransaction.html">createrawparttransaction</a>
+                  <br>
+                
                   <a href="createrawtransaction.html">createrawtransaction</a>
+                  <br>
+                
+                  <a href="createsignaturewithkey.html">createsignaturewithkey</a>
+                  <br>
+                
+                  <a href="decodepsbt.html">decodepsbt</a>
                   <br>
                 
                   <a href="decoderawtransaction.html">decoderawtransaction</a>
@@ -393,16 +479,43 @@ Examples
                   <a href="decodescript.html">decodescript</a>
                   <br>
                 
+                  <a href="finalizepsbt.html">finalizepsbt</a>
+                  <br>
+                
                   <a href="fundrawtransaction.html">fundrawtransaction</a>
+                  <br>
+                
+                  <a href="fundrawtransactionfrom.html">fundrawtransactionfrom</a>
+                  <br>
+                
+                  <a href="generatematchingblindfactor.html">generatematchingblindfactor</a>
                   <br>
                 
                   <a href="getrawtransaction.html">getrawtransaction</a>
                   <br>
                 
+                  <a href="joinpsbts.html">joinpsbts</a>
+                  <br>
+                
+                  <a href="rewindrangeproof.html">rewindrangeproof</a>
+                  <br>
+                
                   <a href="sendrawtransaction.html">sendrawtransaction</a>
                   <br>
                 
-                  <a href="signrawtransaction.html">signrawtransaction</a>
+                  <a href="signrawtransactionwithkey.html">signrawtransactionwithkey</a>
+                  <br>
+                
+                  <a href="testmempoolaccept.html">testmempoolaccept</a>
+                  <br>
+                
+                  <a href="utxoupdatepsbt.html">utxoupdatepsbt</a>
+                  <br>
+                
+                  <a href="verifycommitment.html">verifycommitment</a>
+                  <br>
+                
+                  <a href="verifyrawtransaction.html">verifyrawtransaction</a>
                   <br>
                 
               </div>
@@ -427,13 +540,34 @@ Examples
                   <a href="smsgbuckets.html">smsgbuckets</a>
                   <br>
                 
+                  <a href="smsgdebug.html">smsgdebug</a>
+                  <br>
+                
                   <a href="smsgdisable.html">smsgdisable</a>
+                  <br>
+                
+                  <a href="smsgdumpprivkey.html">smsgdumpprivkey</a>
                   <br>
                 
                   <a href="smsgenable.html">smsgenable</a>
                   <br>
                 
+                  <a href="smsgfund.html">smsgfund</a>
+                  <br>
+                
+                  <a href="smsggetdifficulty.html">smsggetdifficulty</a>
+                  <br>
+                
+                  <a href="smsggetfeerate.html">smsggetfeerate</a>
+                  <br>
+                
+                  <a href="smsggetinfo.html">smsggetinfo</a>
+                  <br>
+                
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimport.html">smsgimport</a>
                   <br>
                 
                   <a href="smsgimportprivkey.html">smsgimportprivkey</a>
@@ -451,6 +585,12 @@ Examples
                   <a href="smsgoutbox.html">smsgoutbox</a>
                   <br>
                 
+                  <a href="smsgpeers.html">smsgpeers</a>
+                  <br>
+                
+                  <a href="smsgpurge.html">smsgpurge</a>
+                  <br>
+                
                   <a href="smsgscanbuckets.html">smsgscanbuckets</a>
                   <br>
                 
@@ -463,7 +603,13 @@ Examples
                   <a href="smsgsendanon.html">smsgsendanon</a>
                   <br>
                 
+                  <a href="smsgsetwallet.html">smsgsetwallet</a>
+                  <br>
+                
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+                  <a href="smsgzmqpush.html">smsgzmqpush</a>
                   <br>
                 
               </div>
@@ -476,7 +622,13 @@ Examples
               </div>
               <div class="card-body">
                 
+                  <a href="devicebackup.html">devicebackup</a>
+                  <br>
+                
                   <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="deviceloadmnemonic.html">deviceloadmnemonic</a>
                   <br>
                 
                   <a href="devicesignmessage.html">devicesignmessage</a>
@@ -500,6 +652,12 @@ Examples
                   <a href="listdevices.html">listdevices</a>
                   <br>
                 
+                  <a href="promptunlockdevice.html">promptunlockdevice</a>
+                  <br>
+                
+                  <a href="unlockdevice.html">unlockdevice</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -513,10 +671,16 @@ Examples
                   <a href="createmultisig.html">createmultisig</a>
                   <br>
                 
-                  <a href="estimatefee.html">estimatefee</a>
+                  <a href="deriveaddresses.html">deriveaddresses</a>
                   <br>
                 
                   <a href="estimatesmartfee.html">estimatesmartfee</a>
+                  <br>
+                
+                  <a href="getdescriptorinfo.html">getdescriptorinfo</a>
+                  <br>
+                
+                  <a href="getindexinfo.html">getindexinfo</a>
                   <br>
                 
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
@@ -550,9 +714,6 @@ Examples
                   <a href="backupwallet.html">backupwallet</a>
                   <br>
                 
-                  <a href="buildscript.html">buildscript</a>
-                  <br>
-                
                   <a href="bumpfee.html">bumpfee</a>
                   <br>
                 
@@ -562,7 +723,13 @@ Examples
                   <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
+                  <a href="createwallet.html">createwallet</a>
+                  <br>
+                
                   <a href="debugwallet.html">debugwallet</a>
+                  <br>
+                
+                  <a href="derivefromstealthaddress.html">derivefromstealthaddress</a>
                   <br>
                 
                   <a href="deriverangekeys.html">deriverangekeys</a>
@@ -595,19 +762,25 @@ Examples
                   <a href="filtertransactions.html">filtertransactions</a>
                   <br>
                 
-                  <a href="getaccount.html">getaccount</a>
+                  <a href="getaddressesbylabel.html">getaddressesbylabel</a>
                   <br>
                 
-                  <a href="getaccountaddress.html">getaccountaddress</a>
-                  <br>
-                
-                  <a href="getaddressesbyaccount.html">getaddressesbyaccount</a>
+                  <a href="getaddressinfo.html">getaddressinfo</a>
                   <br>
                 
                   <a href="getbalance.html">getbalance</a>
                   <br>
                 
+                  <a href="getbalances.html">getbalances</a>
+                  <br>
+                
                   <a href="getcoldstakinginfo.html">getcoldstakinginfo</a>
+                  <br>
+                
+                  <a href="getkeyimage.html">getkeyimage</a>
+                  <br>
+                
+                  <a href="getlockedbalances.html">getlockedbalances</a>
                   <br>
                 
                   <a href="getnewaddress.html">getnewaddress</a>
@@ -622,10 +795,10 @@ Examples
                   <a href="getrawchangeaddress.html">getrawchangeaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaccount.html">getreceivedbyaccount</a>
+                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
+                  <a href="getreceivedbylabel.html">getreceivedbylabel</a>
                   <br>
                 
                   <a href="getstakinginfo.html">getstakinginfo</a>
@@ -641,6 +814,9 @@ Examples
                   <br>
                 
                   <a href="importaddress.html">importaddress</a>
+                  <br>
+                
+                  <a href="importdescriptors.html">importdescriptors</a>
                   <br>
                 
                   <a href="importmulti.html">importmulti</a>
@@ -664,19 +840,19 @@ Examples
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
-                  <a href="listaccounts.html">listaccounts</a>
+                  <a href="listaddressgroupings.html">listaddressgroupings</a>
                   <br>
                 
-                  <a href="listaddressgroupings.html">listaddressgroupings</a>
+                  <a href="listlabels.html">listlabels</a>
                   <br>
                 
                   <a href="listlockunspent.html">listlockunspent</a>
                   <br>
                 
-                  <a href="listreceivedbyaccount.html">listreceivedbyaccount</a>
+                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
                   <br>
                 
-                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
+                  <a href="listreceivedbylabel.html">listreceivedbylabel</a>
                   <br>
                 
                   <a href="listsinceblock.html">listsinceblock</a>
@@ -697,7 +873,13 @@ Examples
                   <a href="listunspentblind.html">listunspentblind</a>
                   <br>
                 
+                  <a href="listwalletdir.html">listwalletdir</a>
+                  <br>
+                
                   <a href="listwallets.html">listwallets</a>
+                  <br>
+                
+                  <a href="loadwallet.html">loadwallet</a>
                   <br>
                 
                   <a href="lockunspent.html">lockunspent</a>
@@ -706,7 +888,7 @@ Examples
                   <a href="manageaddressbook.html">manageaddressbook</a>
                   <br>
                 
-                  <a href="move.html">move</a>
+                  <a href="psbtbumpfee.html">psbtbumpfee</a>
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
@@ -718,37 +900,34 @@ Examples
                   <a href="reservebalance.html">reservebalance</a>
                   <br>
                 
-                  <a href="rewindchain.html">rewindchain</a>
+                  <a href="send.html">send</a>
                   <br>
                 
-                  <a href="scanchain.html">scanchain</a>
+                  <a href="sendanontoanonDEPRECATED..html">sendanontoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontoanon.html">sendanontoanon</a>
+                  <a href="sendanontoblindDEPRECATED..html">sendanontoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontoblind.html">sendanontoblind</a>
+                  <a href="sendanontopartDEPRECATED..html">sendanontopartDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendanontopart.html">sendanontopart</a>
+                  <a href="sendblindtoanonDEPRECATED..html">sendblindtoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoanon.html">sendblindtoanon</a>
+                  <a href="sendblindtoblindDEPRECATED..html">sendblindtoblindDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendblindtoblind.html">sendblindtoblind</a>
-                  <br>
-                
-                  <a href="sendblindtopart.html">sendblindtopart</a>
+                  <a href="sendblindtopartDEPRECATED..html">sendblindtopartDEPRECATED.</a>
                   <br>
                 
                   <a href="sendmany.html">sendmany</a>
                   <br>
                 
-                  <a href="sendparttoanon.html">sendparttoanon</a>
+                  <a href="sendparttoanonDEPRECATED..html">sendparttoanonDEPRECATED.</a>
                   <br>
                 
-                  <a href="sendparttoblind.html">sendparttoblind</a>
+                  <a href="sendparttoblindDEPRECATED..html">sendparttoblindDEPRECATED.</a>
                   <br>
                 
                   <a href="sendtoaddress.html">sendtoaddress</a>
@@ -757,13 +936,34 @@ Examples
                   <a href="sendtypeto.html">sendtypeto</a>
                   <br>
                 
-                  <a href="setaccount.html">setaccount</a>
+                  <a href="sethdseed.html">sethdseed</a>
+                  <br>
+                
+                  <a href="setlabel.html">setlabel</a>
                   <br>
                 
                   <a href="settxfee.html">settxfee</a>
                   <br>
                 
+                  <a href="setwalletflag.html">setwalletflag</a>
+                  <br>
+                
                   <a href="signmessage.html">signmessage</a>
+                  <br>
+                
+                  <a href="signrawtransactionwithwallet.html">signrawtransactionwithwallet</a>
+                  <br>
+                
+                  <a href="transactionblinds.html">transactionblinds</a>
+                  <br>
+                
+                  <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="upgradewallet.html">upgradewallet</a>
+                  <br>
+                
+                  <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>
                   <br>
                 
                   <a href="walletlock.html">walletlock</a>
@@ -773,6 +973,9 @@ Examples
                   <br>
                 
                   <a href="walletpassphrasechange.html">walletpassphrasechange</a>
+                  <br>
+                
+                  <a href="walletprocesspsbt.html">walletprocesspsbt</a>
                   <br>
                 
                   <a href="walletsettings.html">walletsettings</a>
@@ -791,12 +994,15 @@ Examples
                   <a href="getnewzmqserverkeypair.html">getnewzmqserverkeypair</a>
                   <br>
                 
+                  <a href="getzmqnotifications.html">getzmqnotifications</a>
+                  <br>
+                
               </div>
             </div>
             <br>
           
-        </div>  
+        </div>
       </div>
     </main> 
   </body>
-</html>		
+</html>
