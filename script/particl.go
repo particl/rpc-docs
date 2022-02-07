@@ -91,7 +91,7 @@ func open(path string) io.Writer {
 }
 
 func run(args ...string) string {
-	out, err := exec.Command("/home/user/particlcore/particl-cli", args...).CombinedOutput()
+	out, err := exec.Command("/tmp/particl-0.19.2.19/bin/particl-cli", args...).CombinedOutput()
 	if err != nil {
 		panic(err)
 	}

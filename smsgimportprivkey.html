@@ -36,13 +36,12 @@
           
             <pre>smsgimportprivkey &#34;privkey&#34; ( &#34;label&#34; )
 
-Adds a private key (as returned by dumpprivkey) to the smsg database.
-
-The imported key can receive messages even if the wallet is locked.
+Adds a private key (as returned by dumpprivkey) to the SMSG database.
+Keys imported into SMSG will be stored unencrypted and can receive messages even if the wallet is locked.
 
 Arguments:
-1. &#34;privkey&#34;          (string, required) The private key (see dumpprivkey)
-2. &#34;label&#34;            (string, optional, default=&#34;&#34;) An optional label
+1. privkey    (string, required) The private key to import (see dumpprivkey).
+2. label      (string, optional, default=) An optional label.
 
 Examples:
 
@@ -53,19 +52,13 @@ Import the private key
 &gt; particl-cli smsgimportprivkey &#34;mykey&#34;
 
 As a JSON-RPC call
-&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;smsgimportprivkey&#34;, &#34;params&#34;: [&#34;mykey&#34;, &#34;testing&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51935/
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;smsgimportprivkey&#34;, &#34;params&#34;: [&#34;mykey&#34;, &#34;testing&#34;] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
 
 </pre>
             <hr>
           
           <p>
-          This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
-          </p>
-          <p>
-          Particl version: 0.16.0.1 
-          </p>
-          <p>
-          Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
+          Particl version: 0.19.2.19
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -104,6 +97,12 @@ As a JSON-RPC call
                   <a href="anonoutput.html">anonoutput</a>
                   <br>
                 
+                  <a href="checkkeyimage.html">checkkeyimage</a>
+                  <br>
+                
+                  <a href="rollbackrctindex.html">rollbackrctindex</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -120,6 +119,9 @@ As a JSON-RPC call
                   <a href="getblock.html">getblock</a>
                   <br>
                 
+                  <a href="getblockbalances.html">getblockbalances</a>
+                  <br>
+                
                   <a href="getblockchaininfo.html">getblockchaininfo</a>
                   <br>
                 
@@ -129,13 +131,25 @@ As a JSON-RPC call
                   <a href="getblockdeltas.html">getblockdeltas</a>
                   <br>
                 
+                  <a href="getblockfilter.html">getblockfilter</a>
+                  <br>
+                
                   <a href="getblockhash.html">getblockhash</a>
+                  <br>
+                
+                  <a href="getblockhashafter.html">getblockhashafter</a>
                   <br>
                 
                   <a href="getblockhashes.html">getblockhashes</a>
                   <br>
                 
                   <a href="getblockheader.html">getblockheader</a>
+                  <br>
+                
+                  <a href="getblockreward.html">getblockreward</a>
+                  <br>
+                
+                  <a href="getblockstats.html">getblockstats</a>
                   <br>
                 
                   <a href="getchaintips.html">getchaintips</a>
@@ -145,6 +159,9 @@ As a JSON-RPC call
                   <br>
                 
                   <a href="getdifficulty.html">getdifficulty</a>
+                  <br>
+                
+                  <a href="getindexinfo.html">getindexinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -183,7 +200,19 @@ As a JSON-RPC call
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="pruneorphanedblocks.html">pruneorphanedblocks</a>
+                  <br>
+                
+                  <a href="rehashblock.html">rehashblock</a>
+                  <br>
+                
+                  <a href="rewindchain.html">rewindchain</a>
+                  <br>
+                
                   <a href="savemempool.html">savemempool</a>
+                  <br>
+                
+                  <a href="scantxoutset.html">scantxoutset</a>
                   <br>
                 
                   <a href="verifychain.html">verifychain</a>
@@ -205,6 +234,9 @@ As a JSON-RPC call
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
+                  <a href="getrpcinfo.html">getrpcinfo</a>
+                  <br>
+                
                   <a href="help.html">help</a>
                   <br>
                 
@@ -223,12 +255,22 @@ As a JSON-RPC call
           
             <div class="card">
               <div class="card-header">
-                Generating
+                Csindex
               </div>
               <div class="card-body">
                 
-                  <a href="generate.html">generate</a>
+                  <a href="listcoldstakeunspent.html">listcoldstakeunspent</a>
                   <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
+                Generating
+              </div>
+              <div class="card-body">
                 
                   <a href="generatetoaddress.html">generatetoaddress</a>
                   <br>
@@ -277,6 +319,9 @@ As a JSON-RPC call
                   <a href="submitblock.html">submitblock</a>
                   <br>
                 
+                  <a href="submitheader.html">submitheader</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -321,6 +366,9 @@ As a JSON-RPC call
                   <a href="getnetworkinfo.html">getnetworkinfo</a>
                   <br>
                 
+                  <a href="getnodeaddresses.html">getnodeaddresses</a>
+                  <br>
+                
                   <a href="getpeerinfo.html">getpeerinfo</a>
                   <br>
                 
@@ -346,10 +394,34 @@ As a JSON-RPC call
               </div>
               <div class="card-body">
                 
+                  <a href="analyzepsbt.html">analyzepsbt</a>
+                  <br>
+                
+                  <a href="buildscript.html">buildscript</a>
+                  <br>
+                
+                  <a href="combinepsbt.html">combinepsbt</a>
+                  <br>
+                
                   <a href="combinerawtransaction.html">combinerawtransaction</a>
                   <br>
                 
+                  <a href="converttopsbt.html">converttopsbt</a>
+                  <br>
+                
+                  <a href="createpsbt.html">createpsbt</a>
+                  <br>
+                
+                  <a href="createrawparttransaction.html">createrawparttransaction</a>
+                  <br>
+                
                   <a href="createrawtransaction.html">createrawtransaction</a>
+                  <br>
+                
+                  <a href="createsignaturewithkey.html">createsignaturewithkey</a>
+                  <br>
+                
+                  <a href="decodepsbt.html">decodepsbt</a>
                   <br>
                 
                   <a href="decoderawtransaction.html">decoderawtransaction</a>
@@ -358,16 +430,43 @@ As a JSON-RPC call
                   <a href="decodescript.html">decodescript</a>
                   <br>
                 
+                  <a href="finalizepsbt.html">finalizepsbt</a>
+                  <br>
+                
                   <a href="fundrawtransaction.html">fundrawtransaction</a>
+                  <br>
+                
+                  <a href="fundrawtransactionfrom.html">fundrawtransactionfrom</a>
+                  <br>
+                
+                  <a href="generatematchingblindfactor.html">generatematchingblindfactor</a>
                   <br>
                 
                   <a href="getrawtransaction.html">getrawtransaction</a>
                   <br>
                 
+                  <a href="joinpsbts.html">joinpsbts</a>
+                  <br>
+                
+                  <a href="rewindrangeproof.html">rewindrangeproof</a>
+                  <br>
+                
                   <a href="sendrawtransaction.html">sendrawtransaction</a>
                   <br>
                 
-                  <a href="signrawtransaction.html">signrawtransaction</a>
+                  <a href="signrawtransactionwithkey.html">signrawtransactionwithkey</a>
+                  <br>
+                
+                  <a href="testmempoolaccept.html">testmempoolaccept</a>
+                  <br>
+                
+                  <a href="utxoupdatepsbt.html">utxoupdatepsbt</a>
+                  <br>
+                
+                  <a href="verifycommitment.html">verifycommitment</a>
+                  <br>
+                
+                  <a href="verifyrawtransaction.html">verifyrawtransaction</a>
                   <br>
                 
               </div>
@@ -392,13 +491,34 @@ As a JSON-RPC call
                   <a href="smsgbuckets.html">smsgbuckets</a>
                   <br>
                 
+                  <a href="smsgdebug.html">smsgdebug</a>
+                  <br>
+                
                   <a href="smsgdisable.html">smsgdisable</a>
+                  <br>
+                
+                  <a href="smsgdumpprivkey.html">smsgdumpprivkey</a>
                   <br>
                 
                   <a href="smsgenable.html">smsgenable</a>
                   <br>
                 
+                  <a href="smsgfund.html">smsgfund</a>
+                  <br>
+                
+                  <a href="smsggetdifficulty.html">smsggetdifficulty</a>
+                  <br>
+                
+                  <a href="smsggetfeerate.html">smsggetfeerate</a>
+                  <br>
+                
+                  <a href="smsggetinfo.html">smsggetinfo</a>
+                  <br>
+                
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimport.html">smsgimport</a>
                   <br>
                 
                   <a href="smsgimportprivkey.html">smsgimportprivkey</a>
@@ -416,6 +536,12 @@ As a JSON-RPC call
                   <a href="smsgoutbox.html">smsgoutbox</a>
                   <br>
                 
+                  <a href="smsgpeers.html">smsgpeers</a>
+                  <br>
+                
+                  <a href="smsgpurge.html">smsgpurge</a>
+                  <br>
+                
                   <a href="smsgscanbuckets.html">smsgscanbuckets</a>
                   <br>
                 
@@ -428,7 +554,13 @@ As a JSON-RPC call
                   <a href="smsgsendanon.html">smsgsendanon</a>
                   <br>
                 
+                  <a href="smsgsetwallet.html">smsgsetwallet</a>
+                  <br>
+                
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+                  <a href="smsgzmqpush.html">smsgzmqpush</a>
                   <br>
                 
               </div>
@@ -441,7 +573,13 @@ As a JSON-RPC call
               </div>
               <div class="card-body">
                 
+                  <a href="devicebackup.html">devicebackup</a>
+                  <br>
+                
                   <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="deviceloadmnemonic.html">deviceloadmnemonic</a>
                   <br>
                 
                   <a href="devicesignmessage.html">devicesignmessage</a>
@@ -465,6 +603,12 @@ As a JSON-RPC call
                   <a href="listdevices.html">listdevices</a>
                   <br>
                 
+                  <a href="promptunlockdevice.html">promptunlockdevice</a>
+                  <br>
+                
+                  <a href="unlockdevice.html">unlockdevice</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -478,10 +622,13 @@ As a JSON-RPC call
                   <a href="createmultisig.html">createmultisig</a>
                   <br>
                 
-                  <a href="estimatefee.html">estimatefee</a>
+                  <a href="deriveaddresses.html">deriveaddresses</a>
                   <br>
                 
                   <a href="estimatesmartfee.html">estimatesmartfee</a>
+                  <br>
+                
+                  <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
@@ -515,9 +662,6 @@ As a JSON-RPC call
                   <a href="backupwallet.html">backupwallet</a>
                   <br>
                 
-                  <a href="buildscript.html">buildscript</a>
-                  <br>
-                
                   <a href="bumpfee.html">bumpfee</a>
                   <br>
                 
@@ -527,7 +671,13 @@ As a JSON-RPC call
                   <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
+                  <a href="createwallet.html">createwallet</a>
+                  <br>
+                
                   <a href="debugwallet.html">debugwallet</a>
+                  <br>
+                
+                  <a href="derivefromstealthaddress.html">derivefromstealthaddress</a>
                   <br>
                 
                   <a href="deriverangekeys.html">deriverangekeys</a>
@@ -560,19 +710,25 @@ As a JSON-RPC call
                   <a href="filtertransactions.html">filtertransactions</a>
                   <br>
                 
-                  <a href="getaccount.html">getaccount</a>
+                  <a href="getaddressesbylabel.html">getaddressesbylabel</a>
                   <br>
                 
-                  <a href="getaccountaddress.html">getaccountaddress</a>
-                  <br>
-                
-                  <a href="getaddressesbyaccount.html">getaddressesbyaccount</a>
+                  <a href="getaddressinfo.html">getaddressinfo</a>
                   <br>
                 
                   <a href="getbalance.html">getbalance</a>
                   <br>
                 
+                  <a href="getbalances.html">getbalances</a>
+                  <br>
+                
                   <a href="getcoldstakinginfo.html">getcoldstakinginfo</a>
+                  <br>
+                
+                  <a href="getkeyimage.html">getkeyimage</a>
+                  <br>
+                
+                  <a href="getlockedbalances.html">getlockedbalances</a>
                   <br>
                 
                   <a href="getnewaddress.html">getnewaddress</a>
@@ -587,10 +743,10 @@ As a JSON-RPC call
                   <a href="getrawchangeaddress.html">getrawchangeaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaccount.html">getreceivedbyaccount</a>
+                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
+                  <a href="getreceivedbylabel.html">getreceivedbylabel</a>
                   <br>
                 
                   <a href="getstakinginfo.html">getstakinginfo</a>
@@ -629,19 +785,19 @@ As a JSON-RPC call
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
-                  <a href="listaccounts.html">listaccounts</a>
+                  <a href="listaddressgroupings.html">listaddressgroupings</a>
                   <br>
                 
-                  <a href="listaddressgroupings.html">listaddressgroupings</a>
+                  <a href="listlabels.html">listlabels</a>
                   <br>
                 
                   <a href="listlockunspent.html">listlockunspent</a>
                   <br>
                 
-                  <a href="listreceivedbyaccount.html">listreceivedbyaccount</a>
+                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
                   <br>
                 
-                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
+                  <a href="listreceivedbylabel.html">listreceivedbylabel</a>
                   <br>
                 
                   <a href="listsinceblock.html">listsinceblock</a>
@@ -662,16 +818,19 @@ As a JSON-RPC call
                   <a href="listunspentblind.html">listunspentblind</a>
                   <br>
                 
+                  <a href="listwalletdir.html">listwalletdir</a>
+                  <br>
+                
                   <a href="listwallets.html">listwallets</a>
+                  <br>
+                
+                  <a href="loadwallet.html">loadwallet</a>
                   <br>
                 
                   <a href="lockunspent.html">lockunspent</a>
                   <br>
                 
                   <a href="manageaddressbook.html">manageaddressbook</a>
-                  <br>
-                
-                  <a href="move.html">move</a>
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
@@ -681,12 +840,6 @@ As a JSON-RPC call
                   <br>
                 
                   <a href="reservebalance.html">reservebalance</a>
-                  <br>
-                
-                  <a href="rewindchain.html">rewindchain</a>
-                  <br>
-                
-                  <a href="scanchain.html">scanchain</a>
                   <br>
                 
                   <a href="sendanontoanon.html">sendanontoanon</a>
@@ -722,13 +875,31 @@ As a JSON-RPC call
                   <a href="sendtypeto.html">sendtypeto</a>
                   <br>
                 
-                  <a href="setaccount.html">setaccount</a>
+                  <a href="sethdseed.html">sethdseed</a>
+                  <br>
+                
+                  <a href="setlabel.html">setlabel</a>
                   <br>
                 
                   <a href="settxfee.html">settxfee</a>
                   <br>
                 
+                  <a href="setwalletflag.html">setwalletflag</a>
+                  <br>
+                
                   <a href="signmessage.html">signmessage</a>
+                  <br>
+                
+                  <a href="signrawtransactionwithwallet.html">signrawtransactionwithwallet</a>
+                  <br>
+                
+                  <a href="transactionblinds.html">transactionblinds</a>
+                  <br>
+                
+                  <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>
                   <br>
                 
                   <a href="walletlock.html">walletlock</a>
@@ -738,6 +909,9 @@ As a JSON-RPC call
                   <br>
                 
                   <a href="walletpassphrasechange.html">walletpassphrasechange</a>
+                  <br>
+                
+                  <a href="walletprocesspsbt.html">walletprocesspsbt</a>
                   <br>
                 
                   <a href="walletsettings.html">walletsettings</a>
@@ -756,12 +930,15 @@ As a JSON-RPC call
                   <a href="getnewzmqserverkeypair.html">getnewzmqserverkeypair</a>
                   <br>
                 
+                  <a href="getzmqnotifications.html">getzmqnotifications</a>
+                  <br>
+                
               </div>
             </div>
             <br>
           
-        </div>  
+        </div>
       </div>
     </main> 
   </body>
-</html>		
+</html>
