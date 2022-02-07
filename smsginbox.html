@@ -34,20 +34,43 @@
         <div class="col-8 col-lg-9 col-xl-10">
           <h1>smsginbox - Particl RPC</h1>
           
-            <pre>smsginbox ( all|unread|clear )
-Decrypt and display all received messages.
+            <pre>smsginbox ( &#34;mode&#34; &#34;filter&#34; options )
+
+Decrypt and display received messages.
 Warning: clear will delete all messages.
+
+Arguments:
+1. mode                         (string, optional, default=unread) &#34;all|unread|clear&#34; List all messages, unread messages or clear all messages.
+2. filter                       (string, optional, default=) Filter messages when in list mode. Applied to from, to and text fields.
+3. options                      (json object, optional, default=)
+     {
+       &#34;updatestatus&#34;: bool,    (boolean, optional, default=true) Update read status if true.
+       &#34;encoding&#34;: &#34;str&#34;,       (string, optional, default=text) Display message data in encoding, values: &#34;text&#34;, &#34;hex&#34;, &#34;none&#34;.
+     }
+
+Result:
+{
+  &#34;msgid&#34;: &#34;str&#34;                    (string) The message identifier
+  &#34;version&#34;: &#34;str&#34;                  (string) The message version
+  &#34;received&#34;: &#34;time&#34;                (string) Time the message was received
+  &#34;sent&#34;: &#34;time&#34;                    (string) Time the message was sent
+  &#34;daysretention&#34;: int              (int) DEPRECATED Number of days message will stay in the network for
+  &#34;ttl&#34;: int                        (int) Seconds message will stay in the network for
+  &#34;from&#34;: &#34;str&#34;                     (string) Address the message was sent from
+  &#34;to&#34;: &#34;str&#34;                       (string) Address the message was sent to
+  &#34;text&#34;: &#34;str&#34;                     (string) Message text
+}
+
+Examples:
+Display unread received messages:&gt; particl-cli smsginbox 
+Display all received messages that match &#34;address&#34;:&gt; particl-cli smsginbox &#34;all&#34; &#34;address&#34;
+&gt; curl --user myusername --data-binary &#39;{&#34;jsonrpc&#34;: &#34;1.0&#34;, &#34;id&#34;:&#34;curltest&#34;, &#34;method&#34;: &#34;smsginbox&#34;, &#34;params&#34;: [] }&#39; -H &#39;content-type: text/plain;&#39; http://127.0.0.1:51735/
+
 </pre>
             <hr>
           
           <p>
-          This is a website, created out of frustration with uncomplete and outdated Particl Core RPC documentation online.
-          </p>
-          <p>
-          Particl version: 0.16.0.1 
-          </p>
-          <p>
-          Note that the RPC is from a regtest node (for completeness), so it includes some additional calls that a regular node doesn't have.
+          Particl version: 0.19.2.19
           </p>
         </div>
         <div class="col-4 col-lg-3 col-xl-2">
@@ -86,6 +109,12 @@ Warning: clear will delete all messages.
                   <a href="anonoutput.html">anonoutput</a>
                   <br>
                 
+                  <a href="checkkeyimage.html">checkkeyimage</a>
+                  <br>
+                
+                  <a href="rollbackrctindex.html">rollbackrctindex</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -102,6 +131,9 @@ Warning: clear will delete all messages.
                   <a href="getblock.html">getblock</a>
                   <br>
                 
+                  <a href="getblockbalances.html">getblockbalances</a>
+                  <br>
+                
                   <a href="getblockchaininfo.html">getblockchaininfo</a>
                   <br>
                 
@@ -111,13 +143,25 @@ Warning: clear will delete all messages.
                   <a href="getblockdeltas.html">getblockdeltas</a>
                   <br>
                 
+                  <a href="getblockfilter.html">getblockfilter</a>
+                  <br>
+                
                   <a href="getblockhash.html">getblockhash</a>
+                  <br>
+                
+                  <a href="getblockhashafter.html">getblockhashafter</a>
                   <br>
                 
                   <a href="getblockhashes.html">getblockhashes</a>
                   <br>
                 
                   <a href="getblockheader.html">getblockheader</a>
+                  <br>
+                
+                  <a href="getblockreward.html">getblockreward</a>
+                  <br>
+                
+                  <a href="getblockstats.html">getblockstats</a>
                   <br>
                 
                   <a href="getchaintips.html">getchaintips</a>
@@ -127,6 +171,9 @@ Warning: clear will delete all messages.
                   <br>
                 
                   <a href="getdifficulty.html">getdifficulty</a>
+                  <br>
+                
+                  <a href="getindexinfo.html">getindexinfo</a>
                   <br>
                 
                   <a href="getmempoolancestors.html">getmempoolancestors</a>
@@ -165,7 +212,19 @@ Warning: clear will delete all messages.
                   <a href="pruneblockchain.html">pruneblockchain</a>
                   <br>
                 
+                  <a href="pruneorphanedblocks.html">pruneorphanedblocks</a>
+                  <br>
+                
+                  <a href="rehashblock.html">rehashblock</a>
+                  <br>
+                
+                  <a href="rewindchain.html">rewindchain</a>
+                  <br>
+                
                   <a href="savemempool.html">savemempool</a>
+                  <br>
+                
+                  <a href="scantxoutset.html">scantxoutset</a>
                   <br>
                 
                   <a href="verifychain.html">verifychain</a>
@@ -187,6 +246,9 @@ Warning: clear will delete all messages.
                   <a href="getmemoryinfo.html">getmemoryinfo</a>
                   <br>
                 
+                  <a href="getrpcinfo.html">getrpcinfo</a>
+                  <br>
+                
                   <a href="help.html">help</a>
                   <br>
                 
@@ -205,12 +267,22 @@ Warning: clear will delete all messages.
           
             <div class="card">
               <div class="card-header">
-                Generating
+                Csindex
               </div>
               <div class="card-body">
                 
-                  <a href="generate.html">generate</a>
+                  <a href="listcoldstakeunspent.html">listcoldstakeunspent</a>
                   <br>
+                
+              </div>
+            </div>
+            <br>
+          
+            <div class="card">
+              <div class="card-header">
+                Generating
+              </div>
+              <div class="card-body">
                 
                   <a href="generatetoaddress.html">generatetoaddress</a>
                   <br>
@@ -259,6 +331,9 @@ Warning: clear will delete all messages.
                   <a href="submitblock.html">submitblock</a>
                   <br>
                 
+                  <a href="submitheader.html">submitheader</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -303,6 +378,9 @@ Warning: clear will delete all messages.
                   <a href="getnetworkinfo.html">getnetworkinfo</a>
                   <br>
                 
+                  <a href="getnodeaddresses.html">getnodeaddresses</a>
+                  <br>
+                
                   <a href="getpeerinfo.html">getpeerinfo</a>
                   <br>
                 
@@ -328,10 +406,34 @@ Warning: clear will delete all messages.
               </div>
               <div class="card-body">
                 
+                  <a href="analyzepsbt.html">analyzepsbt</a>
+                  <br>
+                
+                  <a href="buildscript.html">buildscript</a>
+                  <br>
+                
+                  <a href="combinepsbt.html">combinepsbt</a>
+                  <br>
+                
                   <a href="combinerawtransaction.html">combinerawtransaction</a>
                   <br>
                 
+                  <a href="converttopsbt.html">converttopsbt</a>
+                  <br>
+                
+                  <a href="createpsbt.html">createpsbt</a>
+                  <br>
+                
+                  <a href="createrawparttransaction.html">createrawparttransaction</a>
+                  <br>
+                
                   <a href="createrawtransaction.html">createrawtransaction</a>
+                  <br>
+                
+                  <a href="createsignaturewithkey.html">createsignaturewithkey</a>
+                  <br>
+                
+                  <a href="decodepsbt.html">decodepsbt</a>
                   <br>
                 
                   <a href="decoderawtransaction.html">decoderawtransaction</a>
@@ -340,16 +442,43 @@ Warning: clear will delete all messages.
                   <a href="decodescript.html">decodescript</a>
                   <br>
                 
+                  <a href="finalizepsbt.html">finalizepsbt</a>
+                  <br>
+                
                   <a href="fundrawtransaction.html">fundrawtransaction</a>
+                  <br>
+                
+                  <a href="fundrawtransactionfrom.html">fundrawtransactionfrom</a>
+                  <br>
+                
+                  <a href="generatematchingblindfactor.html">generatematchingblindfactor</a>
                   <br>
                 
                   <a href="getrawtransaction.html">getrawtransaction</a>
                   <br>
                 
+                  <a href="joinpsbts.html">joinpsbts</a>
+                  <br>
+                
+                  <a href="rewindrangeproof.html">rewindrangeproof</a>
+                  <br>
+                
                   <a href="sendrawtransaction.html">sendrawtransaction</a>
                   <br>
                 
-                  <a href="signrawtransaction.html">signrawtransaction</a>
+                  <a href="signrawtransactionwithkey.html">signrawtransactionwithkey</a>
+                  <br>
+                
+                  <a href="testmempoolaccept.html">testmempoolaccept</a>
+                  <br>
+                
+                  <a href="utxoupdatepsbt.html">utxoupdatepsbt</a>
+                  <br>
+                
+                  <a href="verifycommitment.html">verifycommitment</a>
+                  <br>
+                
+                  <a href="verifyrawtransaction.html">verifyrawtransaction</a>
                   <br>
                 
               </div>
@@ -374,13 +503,34 @@ Warning: clear will delete all messages.
                   <a href="smsgbuckets.html">smsgbuckets</a>
                   <br>
                 
+                  <a href="smsgdebug.html">smsgdebug</a>
+                  <br>
+                
                   <a href="smsgdisable.html">smsgdisable</a>
+                  <br>
+                
+                  <a href="smsgdumpprivkey.html">smsgdumpprivkey</a>
                   <br>
                 
                   <a href="smsgenable.html">smsgenable</a>
                   <br>
                 
+                  <a href="smsgfund.html">smsgfund</a>
+                  <br>
+                
+                  <a href="smsggetdifficulty.html">smsggetdifficulty</a>
+                  <br>
+                
+                  <a href="smsggetfeerate.html">smsggetfeerate</a>
+                  <br>
+                
+                  <a href="smsggetinfo.html">smsggetinfo</a>
+                  <br>
+                
                   <a href="smsggetpubkey.html">smsggetpubkey</a>
+                  <br>
+                
+                  <a href="smsgimport.html">smsgimport</a>
                   <br>
                 
                   <a href="smsgimportprivkey.html">smsgimportprivkey</a>
@@ -398,6 +548,12 @@ Warning: clear will delete all messages.
                   <a href="smsgoutbox.html">smsgoutbox</a>
                   <br>
                 
+                  <a href="smsgpeers.html">smsgpeers</a>
+                  <br>
+                
+                  <a href="smsgpurge.html">smsgpurge</a>
+                  <br>
+                
                   <a href="smsgscanbuckets.html">smsgscanbuckets</a>
                   <br>
                 
@@ -410,7 +566,13 @@ Warning: clear will delete all messages.
                   <a href="smsgsendanon.html">smsgsendanon</a>
                   <br>
                 
+                  <a href="smsgsetwallet.html">smsgsetwallet</a>
+                  <br>
+                
                   <a href="smsgview.html">smsgview</a>
+                  <br>
+                
+                  <a href="smsgzmqpush.html">smsgzmqpush</a>
                   <br>
                 
               </div>
@@ -423,7 +585,13 @@ Warning: clear will delete all messages.
               </div>
               <div class="card-body">
                 
+                  <a href="devicebackup.html">devicebackup</a>
+                  <br>
+                
                   <a href="devicegetnewstealthaddress.html">devicegetnewstealthaddress</a>
+                  <br>
+                
+                  <a href="deviceloadmnemonic.html">deviceloadmnemonic</a>
                   <br>
                 
                   <a href="devicesignmessage.html">devicesignmessage</a>
@@ -447,6 +615,12 @@ Warning: clear will delete all messages.
                   <a href="listdevices.html">listdevices</a>
                   <br>
                 
+                  <a href="promptunlockdevice.html">promptunlockdevice</a>
+                  <br>
+                
+                  <a href="unlockdevice.html">unlockdevice</a>
+                  <br>
+                
               </div>
             </div>
             <br>
@@ -460,10 +634,13 @@ Warning: clear will delete all messages.
                   <a href="createmultisig.html">createmultisig</a>
                   <br>
                 
-                  <a href="estimatefee.html">estimatefee</a>
+                  <a href="deriveaddresses.html">deriveaddresses</a>
                   <br>
                 
                   <a href="estimatesmartfee.html">estimatesmartfee</a>
+                  <br>
+                
+                  <a href="getdescriptorinfo.html">getdescriptorinfo</a>
                   <br>
                 
                   <a href="signmessagewithprivkey.html">signmessagewithprivkey</a>
@@ -497,9 +674,6 @@ Warning: clear will delete all messages.
                   <a href="backupwallet.html">backupwallet</a>
                   <br>
                 
-                  <a href="buildscript.html">buildscript</a>
-                  <br>
-                
                   <a href="bumpfee.html">bumpfee</a>
                   <br>
                 
@@ -509,7 +683,13 @@ Warning: clear will delete all messages.
                   <a href="createsignaturewithwallet.html">createsignaturewithwallet</a>
                   <br>
                 
+                  <a href="createwallet.html">createwallet</a>
+                  <br>
+                
                   <a href="debugwallet.html">debugwallet</a>
+                  <br>
+                
+                  <a href="derivefromstealthaddress.html">derivefromstealthaddress</a>
                   <br>
                 
                   <a href="deriverangekeys.html">deriverangekeys</a>
@@ -542,19 +722,25 @@ Warning: clear will delete all messages.
                   <a href="filtertransactions.html">filtertransactions</a>
                   <br>
                 
-                  <a href="getaccount.html">getaccount</a>
+                  <a href="getaddressesbylabel.html">getaddressesbylabel</a>
                   <br>
                 
-                  <a href="getaccountaddress.html">getaccountaddress</a>
-                  <br>
-                
-                  <a href="getaddressesbyaccount.html">getaddressesbyaccount</a>
+                  <a href="getaddressinfo.html">getaddressinfo</a>
                   <br>
                 
                   <a href="getbalance.html">getbalance</a>
                   <br>
                 
+                  <a href="getbalances.html">getbalances</a>
+                  <br>
+                
                   <a href="getcoldstakinginfo.html">getcoldstakinginfo</a>
+                  <br>
+                
+                  <a href="getkeyimage.html">getkeyimage</a>
+                  <br>
+                
+                  <a href="getlockedbalances.html">getlockedbalances</a>
                   <br>
                 
                   <a href="getnewaddress.html">getnewaddress</a>
@@ -569,10 +755,10 @@ Warning: clear will delete all messages.
                   <a href="getrawchangeaddress.html">getrawchangeaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaccount.html">getreceivedbyaccount</a>
+                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
                   <br>
                 
-                  <a href="getreceivedbyaddress.html">getreceivedbyaddress</a>
+                  <a href="getreceivedbylabel.html">getreceivedbylabel</a>
                   <br>
                 
                   <a href="getstakinginfo.html">getstakinginfo</a>
@@ -611,19 +797,19 @@ Warning: clear will delete all messages.
                   <a href="keypoolrefill.html">keypoolrefill</a>
                   <br>
                 
-                  <a href="listaccounts.html">listaccounts</a>
+                  <a href="listaddressgroupings.html">listaddressgroupings</a>
                   <br>
                 
-                  <a href="listaddressgroupings.html">listaddressgroupings</a>
+                  <a href="listlabels.html">listlabels</a>
                   <br>
                 
                   <a href="listlockunspent.html">listlockunspent</a>
                   <br>
                 
-                  <a href="listreceivedbyaccount.html">listreceivedbyaccount</a>
+                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
                   <br>
                 
-                  <a href="listreceivedbyaddress.html">listreceivedbyaddress</a>
+                  <a href="listreceivedbylabel.html">listreceivedbylabel</a>
                   <br>
                 
                   <a href="listsinceblock.html">listsinceblock</a>
@@ -644,16 +830,19 @@ Warning: clear will delete all messages.
                   <a href="listunspentblind.html">listunspentblind</a>
                   <br>
                 
+                  <a href="listwalletdir.html">listwalletdir</a>
+                  <br>
+                
                   <a href="listwallets.html">listwallets</a>
+                  <br>
+                
+                  <a href="loadwallet.html">loadwallet</a>
                   <br>
                 
                   <a href="lockunspent.html">lockunspent</a>
                   <br>
                 
                   <a href="manageaddressbook.html">manageaddressbook</a>
-                  <br>
-                
-                  <a href="move.html">move</a>
                   <br>
                 
                   <a href="removeprunedfunds.html">removeprunedfunds</a>
@@ -663,12 +852,6 @@ Warning: clear will delete all messages.
                   <br>
                 
                   <a href="reservebalance.html">reservebalance</a>
-                  <br>
-                
-                  <a href="rewindchain.html">rewindchain</a>
-                  <br>
-                
-                  <a href="scanchain.html">scanchain</a>
                   <br>
                 
                   <a href="sendanontoanon.html">sendanontoanon</a>
@@ -704,13 +887,31 @@ Warning: clear will delete all messages.
                   <a href="sendtypeto.html">sendtypeto</a>
                   <br>
                 
-                  <a href="setaccount.html">setaccount</a>
+                  <a href="sethdseed.html">sethdseed</a>
+                  <br>
+                
+                  <a href="setlabel.html">setlabel</a>
                   <br>
                 
                   <a href="settxfee.html">settxfee</a>
                   <br>
                 
+                  <a href="setwalletflag.html">setwalletflag</a>
+                  <br>
+                
                   <a href="signmessage.html">signmessage</a>
+                  <br>
+                
+                  <a href="signrawtransactionwithwallet.html">signrawtransactionwithwallet</a>
+                  <br>
+                
+                  <a href="transactionblinds.html">transactionblinds</a>
+                  <br>
+                
+                  <a href="unloadwallet.html">unloadwallet</a>
+                  <br>
+                
+                  <a href="walletcreatefundedpsbt.html">walletcreatefundedpsbt</a>
                   <br>
                 
                   <a href="walletlock.html">walletlock</a>
@@ -720,6 +921,9 @@ Warning: clear will delete all messages.
                   <br>
                 
                   <a href="walletpassphrasechange.html">walletpassphrasechange</a>
+                  <br>
+                
+                  <a href="walletprocesspsbt.html">walletprocesspsbt</a>
                   <br>
                 
                   <a href="walletsettings.html">walletsettings</a>
@@ -738,12 +942,15 @@ Warning: clear will delete all messages.
                   <a href="getnewzmqserverkeypair.html">getnewzmqserverkeypair</a>
                   <br>
                 
+                  <a href="getzmqnotifications.html">getzmqnotifications</a>
+                  <br>
+                
               </div>
             </div>
             <br>
           
-        </div>  
+        </div>
       </div>
     </main> 
   </body>
-</html>		
+</html>
